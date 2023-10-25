@@ -3,11 +3,13 @@ import staticAuth from "../../middlewares/static-auth.routes";
 import userRoutes from "./users.route";
 import uptimeRoutes from "./uptime.route";
 import jobRoutes from "./job.route";
+import darwinRoutes from "./darwin.route";
 
 const router = express.Router();
 
 router.use("/uptime", uptimeRoutes); // <-- public routes
 router.use("/job", jobRoutes); // <-- public routes
+router.use("/darwin", darwinRoutes); // <-- public routes
 router.use("/users", staticAuth, userRoutes); // <-- private routes
 
 export default router;
