@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import v1Routes from "./routes/v1";
 dotenv.config();
 
+import "./store/store";
+
 const app: Express = express();
 const port = process.env.PORT || 7000;
 

@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import store from "store";
 import {
   checkin,
   checkout,
@@ -38,7 +37,7 @@ router.post("/login", async (req: Request, res: Response) => {
 router.get("/login-data", async (req: Request, res: Response) => {
   res.json({
     success: true,
-    data: store.get("login-data"),
+    data: (globalThis as any).store.getLoginData(),
   });
 });
 
@@ -46,10 +45,10 @@ router.post("/set-login-data", async (req: Request, res: Response) => {
   try {
     const data = req.body;
     if (!data.token) throw new Error("invalid data");
-    store.set("login-data", data);
+    (globalThis as any).store.setLoginData(data);
     res.json({
       success: true,
-      data: store.get("login-data"),
+      data: (globalThis as any).store.getLoginData(),
     });
   } catch (error: any) {
     handleError(error, res);
