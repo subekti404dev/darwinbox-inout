@@ -38,7 +38,7 @@ class PGStore implements IStore {
 
   private async init() {
     this.pool = new Pool({
-      connectionString: process.env.PG_STRING_CONNECTION + "?sslmode=require",
+      connectionString: process.env.POSTGRES_URL + "?sslmode=require",
     });
     await this.pool?.query(`
       CREATE TABLE IF NOT EXISTS darwin_data (
@@ -75,6 +75,6 @@ class PGStore implements IStore {
   }
 }
 
-(globalThis as any).store = process.env.PG_STRING_CONNECTION
+(globalThis as any).store = process.env.POSTGRES_URL
   ? new PGStore()
   : new InMemoryStore();
