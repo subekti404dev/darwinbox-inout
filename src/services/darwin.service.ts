@@ -1,7 +1,7 @@
 import Axios from "axios";
 import { base64encode } from "nodejs-base64";
-import store from "store";
 import { format } from "date-fns";
+import { storeData } from "../store/store";
 
 const getHeaders = (host: string) => ({
   "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 9; Redmi Note 5 MIUI/9.6.27)",
@@ -24,7 +24,7 @@ export const login = async ({ qrcode, host }: ILogin) => {
     headers: getHeaders(host),
   });
   if (data?.token) {
-    (globalThis as any).store.setLoginData({ ...data, host });
+    storeData.setLoginData({ ...data, host });
   }
   return data;
 };
@@ -44,7 +44,7 @@ export const checkin = async ({
   if (!location_type || !latlng)
     throw new Error(`location_type and latlng is required!`);
 
-  const loginData = (globalThis as any).store.getLoginData();
+  const loginData = storeData.getLoginData();
   if (!loginData?.token) throw new Error("You are not logged in ");
 
   const lastCheckInData = await getLastCheckin();
@@ -77,7 +77,7 @@ export const checkin = async ({
 };
 
 export const getLastCheckin = async () => {
-  const loginData = (globalThis as any).store.getLoginData();
+  const loginData = storeData.getLoginData();
   if (!loginData?.token) throw new Error("You are not logged in ");
   const { data: lastCheckInData } = await Axios.post(
     `https://${loginData.host}/Mobileapi/LastCheckIndeatils`,
@@ -98,7 +98,7 @@ export const checkout = async ({
   if (!location_type || !latlng)
     throw new Error(`location_type and latlng is required!`);
 
-  const loginData = (globalThis as any).store.getLoginData();
+  const loginData = storeData.getLoginData();
   if (!loginData?.token) throw new Error("You are not logged in ");
 
   const lastCheckInData = await getLastCheckin();

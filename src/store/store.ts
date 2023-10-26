@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import store from "store";
 import pg from "pg";
 const key = "login-data";
@@ -75,6 +78,6 @@ class PGStore implements IStore {
   }
 }
 
-(globalThis as any).store = process.env.POSTGRES_URL
+export const storeData = process.env.POSTGRES_URL
   ? new PGStore()
   : new InMemoryStore();

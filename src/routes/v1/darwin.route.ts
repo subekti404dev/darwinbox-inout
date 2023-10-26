@@ -5,6 +5,7 @@ import {
   getLastCheckin,
   login,
 } from "../../services/darwin.service";
+import { storeData } from "../../store/store";
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.post("/login", async (req: Request, res: Response) => {
 router.get("/login-data", async (req: Request, res: Response) => {
   res.json({
     success: true,
-    data: (globalThis as any).store.getLoginData(),
+    data: storeData.getLoginData(),
   });
 });
 
@@ -45,10 +46,10 @@ router.post("/set-login-data", async (req: Request, res: Response) => {
   try {
     const data = req.body;
     if (!data.token) throw new Error("invalid data");
-    (globalThis as any).store.setLoginData(data);
+    storeData.setLoginData(data);
     res.json({
       success: true,
-      data: (globalThis as any).store.getLoginData(),
+      data: storeData.getLoginData(),
     });
   } catch (error: any) {
     handleError(error, res);

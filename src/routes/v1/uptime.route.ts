@@ -18,7 +18,7 @@ router.get("/", (req: Request, res: Response) => {
   res.json({
     success: true,
     uptime: `${uptimeHour} Hour(s) ${uptimeMin} Minute(s) ${uptimeSec} Second(s)`,
-    tz: process.env.TZ
+    tz: process.env.TZ,
   });
 });
 
