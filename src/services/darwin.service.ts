@@ -1,7 +1,7 @@
 import Axios from "axios";
 import { base64encode } from "nodejs-base64";
 import { format } from "date-fns";
-import { storeData } from "../store/store";
+import { storeData } from "../utils/store";
 
 const getHeaders = (host: string) => ({
   "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 9; Redmi Note 5 MIUI/9.6.27)",

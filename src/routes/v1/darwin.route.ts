@@ -5,7 +5,7 @@ import {
   getLastCheckin,
   login,
 } from "../../services/darwin.service";
-import { storeData } from "../../store/store";
+import { storeData } from "../../utils/store";
 
 const router = express.Router();
 
