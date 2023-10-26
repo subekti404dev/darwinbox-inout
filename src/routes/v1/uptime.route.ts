@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import os from "os";
 const router = express.Router();
 
-router.get("/", (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   let uptimeSec = os.uptime();
   let uptimeMin = uptimeSec / 60;
   let uptimeHour = uptimeMin / 60;

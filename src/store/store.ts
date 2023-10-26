@@ -5,6 +5,11 @@ import store from "store";
 import pg from "pg";
 const key = "login-data";
 const { Pool } = pg;
+export const pool = process.env.POSTGRES_URL
+  ? new Pool({
+      connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+    })
+  : null;
 
 export interface IStore {
   setLoginData: (data: any) => void;
@@ -32,29 +37,24 @@ class InMemoryStore implements IStore {
 }
 
 class PGStore implements IStore {
-  private pool: any = null;
-
   private data: any = {};
   constructor() {
     this.init();
   }
 
   private async init() {
-    this.pool = new Pool({
-      connectionString: process.env.POSTGRES_URL + "?sslmode=require",
-    });
-    await this.pool?.query(`
+    await pool?.query(`
       CREATE TABLE IF NOT EXISTS darwin_data (
         key VARCHAR(50),
         value VARCHAR(1000)
       );
     `);
-    const { rows } = await this.pool?.query(`
+    const { rows } = await pool?.query<any>(`
       SELECT * FROM darwin_data WHERE key = '${key}'
     `);
 
     if (!rows?.[0]) {
-      await this.pool?.query(
+      await pool?.query(
         `INSERT INTO darwin_data (key, value) VALUES ('${key}', '${JSON.stringify(
           this.data
         )}')`
@@ -66,7 +66,7 @@ class PGStore implements IStore {
 
   public setLoginData(data: any) {
     this.data = data;
-    this.pool?.query(
+    pool?.query(
       `UPDATE darwin_data SET value='${JSON.stringify(
         data
       )}' WHERE key='${key}'`
