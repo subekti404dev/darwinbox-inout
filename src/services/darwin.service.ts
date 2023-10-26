@@ -1,6 +1,7 @@
 import Axios from "axios";
 import { base64encode } from "nodejs-base64";
 import store from "store";
+import { format } from "date-fns";
 
 const getHeaders = (host: string) => ({
   "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 9; Redmi Note 5 MIUI/9.6.27)",
@@ -44,6 +45,14 @@ export const checkin = async ({
   const loginData = store.get("login-data", {});
   if (!loginData?.token) throw new Error("You are not logged in ");
 
+  const lastCheckInData = await getLastCheckin();
+  const currDate = format(new Date(), "yyyy-MM-dd");
+  if (
+    currDate === lastCheckInData?.message?.date &&
+    lastCheckInData?.message?.last_action === 1
+  )
+    throw new Error("Today you have already checkin before");
+
   const payload = {
     token: loginData.token,
     location: base64encode(location || latlng),
@@ -65,6 +74,19 @@ export const checkin = async ({
   return data;
 };
 
+export const getLastCheckin = async () => {
+  const loginData = store.get("login-data", {});
+  if (!loginData?.token) throw new Error("You are not logged in ");
+  const { data: lastCheckInData } = await Axios.post(
+    `https://${loginData.host}/Mobileapi/LastCheckIndeatils`,
+    { token: loginData.token },
+    {
+      headers: getHeaders(loginData.host),
+    }
+  );
+  return lastCheckInData;
+};
+
 export const checkout = async ({
   location_type,
   message,
@@ -77,13 +99,14 @@ export const checkout = async ({
   const loginData = store.get("login-data", {});
   if (!loginData?.token) throw new Error("You are not logged in ");
 
-  const { data: lastCheckInData } = await Axios.post(
-    `https://${loginData.host}/Mobileapi/LastCheckIndeatils`,
-    { token: loginData.token },
-    {
-      headers: getHeaders(loginData.host),
-    }
-  );
+  const lastCheckInData = await getLastCheckin();
+  const currDate = format(new Date(), "yyyy-MM-dd");
+  if (
+    currDate === lastCheckInData?.message?.date &&
+    lastCheckInData?.message?.last_action === 2
+  )
+    throw new Error("Today you have already checkout before");
+
 
   if (!lastCheckInData?.message?.id)
     throw new Error(JSON.stringify(lastCheckInData));

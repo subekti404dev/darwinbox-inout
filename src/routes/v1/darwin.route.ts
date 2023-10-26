@@ -1,6 +1,11 @@
 import express, { Request, Response } from "express";
 import store from "store";
-import { checkin, checkout, login } from "../../services/darwin.service";
+import {
+  checkin,
+  checkout,
+  getLastCheckin,
+  login,
+} from "../../services/darwin.service";
 
 const router = express.Router();
 
@@ -47,6 +52,18 @@ router.post("/set-login-data", async (req: Request, res: Response) => {
       data: store.get("login-data"),
     });
   } catch (error: any) {
+    handleError(error, res);
+  }
+});
+
+router.get("/last-checkin", async (req: Request, res: Response) => {
+  try {
+    const data = await getLastCheckin();
+    res.json({
+      success: true,
+      data,
+    });
+  } catch (error) {
     handleError(error, res);
   }
 });
