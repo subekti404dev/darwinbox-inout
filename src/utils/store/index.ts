@@ -16,4 +16,6 @@ const defaultLocation = {
   },
 };
 
-export const storeData = new InMemoryStore(defaultLocation);
+export const storeData = process.env.POSTGRES_URL
+  ? new PGStore(defaultLocation)
+  : new InMemoryStore(defaultLocation);
