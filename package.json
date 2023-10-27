@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc && npm run build:cjs && npm run build:bin",
     "build:cjs": "npx esbuild dist/index.js  --bundle --outfile=dist/build.cjs --format=cjs --platform=node",
-    "build:bin": "npx pkg -t node16-linux dist/index.js",
+    "build:bin": "ncc build dist/build.cjs -o single",
     "vercel": "pnpm build && vercel --prod",
     "start": "node dist/index.js",
     "dev": "pnpm build && concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js --ignore data\""
@@ -35,6 +35,7 @@
     "@types/node-cron": "^3.0.10",
     "@types/pg": "^8.10.7",
     "@types/store": "^2.0.4",
+    "@zeit/ncc": "^0.22.3",
     "concurrently": "^7.5.0",
     "nodemon": "^2.0.20",
     "typescript": "^4.8.4"

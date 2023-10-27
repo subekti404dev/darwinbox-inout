@@ -4,11 +4,11 @@ WORKDIR /app
 COPY . .
 RUN npm install && npm run build && ls -lah
 
-FROM ubuntu:latest
+FROM node:16
 WORKDIR /app
-COPY --from=builder /app/index /app/darwin
-RUN chmod +x /app/darwin
+
+COPY --from=builder /app/single/index.cjs /app/index.cjs
 
 EXPOSE ${PORT:-7000}
 
-CMD ["/app/darwin"]
+CMD ["node", "index.cjs"]
