@@ -7,7 +7,7 @@
     "build": "npx tsc",
     "vercel": "pnpm build && vercel --prod",
     "start": "node dist/index.js",
-    "dev": "pnpm build && concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "dev": "pnpm build && concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js --ignore data\""
   },
   "keywords": [],
   "author": "",

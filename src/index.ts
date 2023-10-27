@@ -4,6 +4,13 @@ import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import v1Routes from "./routes/v1";
+import { storeData } from "./utils/store";
+import { startJob } from "./utils/job";
+
+const data = storeData.getData()
+if (data?.cronIn && data?.cronOut) {
+  startJob(data?.cronIn, data?.cronOut);
+}
 
 const app: Express = express();
 const port = process.env.PORT || 7000;

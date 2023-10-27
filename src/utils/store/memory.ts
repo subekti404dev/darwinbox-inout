@@ -2,7 +2,6 @@ import path from "path";
 import { IStore } from "./interface";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import appRoot from "app-root-path";
-import { startJob } from "../job";
 const fileDir = path.join(appRoot.path, "data");
 const fileName = "config.json";
 const filePath = path.join(fileDir, fileName);
@@ -28,9 +27,6 @@ export class InMemoryStore implements IStore {
       this.writeToFile();
     } else {
       this.loadToFile();
-    }
-    if (this.data?.cronIn && this.data?.cronOut) {
-      startJob(this.data?.cronIn, this.data?.cronOut);
     }
   }
 

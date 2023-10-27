@@ -16,7 +16,7 @@ export const startJob = (start: string, end: string) => {
   const currData = storeData.getData();
   storeData.setData({ ...currData, cronIn, cronOut });
 
-  jobClockIn = cron.schedule(cronIn, async function () {
+  jobClockIn = cron.schedule(cronIn, async () => {
     const data = storeData.getData();
     const payload = {
       location_type: data?.in?.type,
@@ -28,7 +28,7 @@ export const startJob = (start: string, end: string) => {
     console.log(payload);
     checkin(payload);
   });
-  jobClockOut = cron.schedule(cronOut, async function () {
+  jobClockOut = cron.schedule(cronOut, async () => {
     const data = storeData.getData();
     const payload = {
       location_type: data?.out?.type,
@@ -43,7 +43,7 @@ export const startJob = (start: string, end: string) => {
   jobClockIn.start();
   jobClockOut.start();
 
-  console.log(`Job started ! [${checkin}, ${checkout}]`);
+  console.log(`Job started ! [${cronIn}, ${cronOut}]`);
 
   return {
     start: cronIn,

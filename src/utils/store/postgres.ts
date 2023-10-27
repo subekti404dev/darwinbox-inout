@@ -1,6 +1,5 @@
 import pg from "pg";
 import { IStore } from "./interface";
-import { startJob } from "../job";
 const key = "data";
 const { Pool } = pg;
 
@@ -36,9 +35,6 @@ export class PGStore implements IStore {
       );
     } else {
       this.data = JSON.parse(rows?.[0]?.value);
-    }
-    if (this.data?.cronIn && this.data?.cronOut) {
-      startJob(this.data?.cronIn, this.data?.cronOut);
     }
   }
 
