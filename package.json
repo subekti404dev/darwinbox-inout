@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "app-root-path": "^3.1.0",
     "axios": "^1.5.1",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
@@ -21,10 +22,10 @@
     "express": "^4.18.2",
     "node-cron": "^3.0.2",
     "nodejs-base64": "^2.0.0",
-    "pg": "^8.11.3",
-    "store": "^2.0.12"
+    "pg": "^8.11.3"
   },
   "devDependencies": {
+    "@types/app-root-path": "^1.2.7",
     "@types/body-parser": "^1.19.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.14",

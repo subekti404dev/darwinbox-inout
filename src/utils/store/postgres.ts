@@ -1,42 +1,15 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-import store from "store";
 import pg from "pg";
-const key = "login-data";
+import { IStore } from "./interface";
+const key = "data";
 const { Pool } = pg;
+
 export const pool = process.env.POSTGRES_URL
   ? new Pool({
       connectionString: process.env.POSTGRES_URL + "?sslmode=require",
     })
   : null;
 
-export interface IStore {
-  setLoginData: (data: any) => void;
-  getLoginData: () => any;
-}
-
-class InMemoryStore implements IStore {
-  private data: any = null;
-  constructor() {
-    this.init();
-  }
-
-  private init() {
-    this.data = store.get(key) || {};
-  }
-
-  public setLoginData(data: any) {
-    this.data = data;
-    store.set(key, data);
-  }
-
-  public getLoginData() {
-    return this.data;
-  }
-}
-
-class PGStore implements IStore {
+export class PGStore implements IStore {
   private data: any = {};
   constructor() {
     this.init();
@@ -46,7 +19,7 @@ class PGStore implements IStore {
     await pool?.query(`
       CREATE TABLE IF NOT EXISTS darwin_data (
         key VARCHAR(50),
-        value VARCHAR(1000)
+        value VARCHAR(10000)
       );
     `);
     const { rows } = await pool?.query<any>(`
@@ -64,7 +37,7 @@ class PGStore implements IStore {
     }
   }
 
-  public setLoginData(data: any) {
+  public setData(data: any) {
     this.data = data;
     pool?.query(
       `UPDATE darwin_data SET value='${JSON.stringify(
@@ -73,11 +46,7 @@ class PGStore implements IStore {
     );
   }
 
-  public getLoginData() {
+  public getData() {
     return this.data;
   }
 }
-
-export const storeData = process.env.POSTGRES_URL
-  ? new PGStore()
-  : new InMemoryStore();

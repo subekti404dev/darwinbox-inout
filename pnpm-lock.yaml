@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@types/app-root-path': ^1.2.7
   '@types/body-parser': ^1.19.2
   '@types/cors': ^2.8.12
   '@types/express': ^4.17.14
@@ -8,6 +9,7 @@ specifiers:
   '@types/node-cron': ^3.0.10
   '@types/pg': ^8.10.7
   '@types/store': ^2.0.4
+  app-root-path: ^3.1.0
   axios: ^1.5.1
   body-parser: ^1.20.1
   concurrently: ^7.5.0
@@ -19,10 +21,10 @@ specifiers:
   nodejs-base64: ^2.0.0
   nodemon: ^2.0.20
   pg: ^8.11.3
-  store: ^2.0.12
   typescript: ^4.8.4
 
 dependencies:
+  app-root-path: 3.1.0
   axios: 1.5.1
   body-parser: 1.20.2
   cors: 2.8.5
@@ -32,9 +34,9 @@ dependencies:
   node-cron: 3.0.2
   nodejs-base64: 2.0.0
   pg: 8.11.3
-  store: 2.0.12
 
 devDependencies:
+  '@types/app-root-path': 1.2.7
   '@types/body-parser': 1.19.4
   '@types/cors': 2.8.15
   '@types/express': 4.17.20
@@ -53,6 +55,10 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
+
+  /@types/app-root-path/1.2.7:
+    resolution: {integrity: sha512-/NuJ7+xoFO9PlDg+7MXUadZAfgJe1/Sr9ats/b4C7Q+wXx1GkaA8BpD3KQm18Msqd1t2qEwfyFOEhA6cU4+BuQ==}
+    dev: true
 
   /@types/body-parser/1.19.4:
     resolution: {integrity: sha512-N7UDG0/xiPQa2D/XrVJXjkWbpqHCd2sBaB32ggRF2l83RhPfamgKGF8gwwqyksS95qUS5ZYF9aF+lLPRlwI2UA==}
@@ -177,6 +183,11 @@ packages:
       normalize-path: 3.0.0
       picomatch: 2.3.1
     dev: true
+
+  /app-root-path/3.1.0:
+    resolution: {integrity: sha512-biN3PwB2gUtjaYy/isrU3aNWI5w+fAfvHkSvCKeQGxhmYpwKFUxudR3Yya+KqVRHBmEDYh+/lTozYCFbmzX4nA==}
+    engines: {node: '>= 6.0.0'}
+    dev: false
 
   /array-flatten/1.1.1:
     resolution: {integrity: sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg==}
@@ -1108,10 +1119,6 @@ packages:
   /statuses/2.0.1:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
-    dev: false
-
-  /store/2.0.12:
-    resolution: {integrity: sha512-eO9xlzDpXLiMr9W1nQ3Nfp9EzZieIQc10zPPMP5jsVV7bLOziSFFBP0XoDXACEIFtdI+rIz0NwWVA/QVJ8zJtw==}
     dev: false
 
   /string-width/4.2.3:

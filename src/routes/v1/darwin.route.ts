@@ -38,7 +38,7 @@ router.post("/login", async (req: Request, res: Response) => {
 router.get("/login-data", async (req: Request, res: Response) => {
   res.json({
     success: true,
-    data: storeData.getLoginData(),
+    data: storeData.getData(),
   });
 });
 
@@ -46,10 +46,10 @@ router.post("/set-login-data", async (req: Request, res: Response) => {
   try {
     const data = req.body;
     if (!data.token) throw new Error("invalid data");
-    storeData.setLoginData(data);
+    storeData.setData(data);
     res.json({
       success: true,
-      data: storeData.getLoginData(),
+      data: storeData.getData(),
     });
   } catch (error: any) {
     handleError(error, res);

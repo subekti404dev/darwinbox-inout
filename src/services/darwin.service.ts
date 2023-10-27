@@ -24,7 +24,7 @@ export const login = async ({ qrcode, host }: ILogin) => {
     headers: getHeaders(host),
   });
   if (data?.token) {
-    storeData.setLoginData({ ...data, host });
+    storeData.setData({ ...data, host });
   }
   return data;
 };
@@ -44,7 +44,7 @@ export const checkin = async ({
   if (!location_type || !latlng)
     throw new Error(`location_type and latlng is required!`);
 
-  const loginData = storeData.getLoginData();
+  const loginData = storeData.getData();
   if (!loginData?.token) throw new Error("You are not logged in ");
 
   const lastCheckInData = await getLastCheckin();
@@ -77,7 +77,7 @@ export const checkin = async ({
 };
 
 export const getLastCheckin = async () => {
-  const loginData = storeData.getLoginData();
+  const loginData = storeData.getData();
   if (!loginData?.token) throw new Error("You are not logged in ");
   const { data: lastCheckInData } = await Axios.post(
     `https://${loginData.host}/Mobileapi/LastCheckIndeatils`,
@@ -98,7 +98,7 @@ export const checkout = async ({
   if (!location_type || !latlng)
     throw new Error(`location_type and latlng is required!`);
 
-  const loginData = storeData.getLoginData();
+  const loginData = storeData.getData();
   if (!loginData?.token) throw new Error("You are not logged in ");
 
   const lastCheckInData = await getLastCheckin();
