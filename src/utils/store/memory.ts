@@ -2,14 +2,15 @@ import path from "path";
 import { IStore } from "./interface";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import appRoot from "app-root-path";
+import { startJob } from "../job";
 const fileDir = path.join(appRoot.path, "data");
 const fileName = "config.json";
 const filePath = path.join(fileDir, fileName);
 
 export class InMemoryStore implements IStore {
-  private data: any = null;
-  constructor() {
-    this.init();
+  private data: any = {};
+  constructor(defaultValue = {}) {
+    this.init(defaultValue);
   }
 
   private writeToFile() {
@@ -20,18 +21,21 @@ export class InMemoryStore implements IStore {
     this.data = JSON.parse(readFileSync(filePath, "utf-8") || "{}");
   }
 
-  private init() {
-    this.data = {};
+  private init(defaultValue: any = {}) {
     if (!existsSync(fileDir)) mkdirSync(fileDir, { recursive: true });
     if (!existsSync(filePath)) {
+      this.data = defaultValue;
       this.writeToFile();
     } else {
       this.loadToFile();
     }
+    if (this.data?.cronIn && this.data?.cronOut) {
+      startJob(this.data?.cronIn, this.data?.cronOut);
+    }
   }
 
   public setData(data: any) {
-    this.data = data;
+    this.data = { ...this.data, ...data };
     this.writeToFile();
   }
 
