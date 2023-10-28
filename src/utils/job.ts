@@ -12,7 +12,11 @@ let cronOut: string | null;
 
 const isSkipToday = async () => {
   // skip weekend
-  if (["Sabtu", "Minggu"].includes(currentDayName)) return true;
+  if (["Sabtu", "Minggu"].includes(currentDayName)) {
+    console.log("Skip, today is weekend :)");
+
+    return true;
+  }
   return false;
 };
 
