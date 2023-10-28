@@ -2,12 +2,19 @@ import express, { Request, Response } from "express";
 import cron from "node-cron";
 import { checkin, checkout } from "../services/darwin.service";
 import { storeData } from "./store";
+import { currentDayName } from "./day";
 
 let jobClockIn: cron.ScheduledTask | null = null;
 let jobClockOut: cron.ScheduledTask | null = null;
 
 let cronIn: string | null;
 let cronOut: string | null;
+
+const isSkipToday = async () => {
+  // skip weekend
+  if (["Sabtu", "Minggu"].includes(currentDayName)) return true;
+  return false;
+};
 
 export const startJob = (start: string, end: string) => {
   stopJob();
@@ -17,6 +24,7 @@ export const startJob = (start: string, end: string) => {
   storeData.setData({ ...currData, cronIn, cronOut });
 
   jobClockIn = cron.schedule(cronIn, async () => {
+    if (await isSkipToday()) return;
     const data = storeData.getData();
     const payload = {
       location_type: data?.in?.type,
@@ -29,6 +37,7 @@ export const startJob = (start: string, end: string) => {
     checkin(payload);
   });
   jobClockOut = cron.schedule(cronOut, async () => {
+    if (await isSkipToday()) return;
     const data = storeData.getData();
     const payload = {
       location_type: data?.out?.type,

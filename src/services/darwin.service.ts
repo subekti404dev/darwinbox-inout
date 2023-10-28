@@ -1,7 +1,7 @@
 import Axios from "axios";
 import { base64encode } from "nodejs-base64";
-import { format } from "date-fns";
 import { storeData } from "../utils/store";
+import { currentDate } from "../utils/day";
 
 const getHeaders = (host: string) => ({
   "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 9; Redmi Note 5 MIUI/9.6.27)",
@@ -48,9 +48,8 @@ export const checkin = async ({
   if (!loginData?.token) throw new Error("You are not logged in ");
 
   const lastCheckInData = await getLastCheckin();
-  const currDate = format(new Date(), "yyyy-MM-dd");
   if (
-    currDate === lastCheckInData?.message?.date &&
+    currentDate === lastCheckInData?.message?.date &&
     lastCheckInData?.message?.last_action === 1
   )
     throw new Error("Today you have already checkin before");
@@ -102,9 +101,8 @@ export const checkout = async ({
   if (!loginData?.token) throw new Error("You are not logged in ");
 
   const lastCheckInData = await getLastCheckin();
-  const currDate = format(new Date(), "yyyy-MM-dd");
   if (
-    currDate === lastCheckInData?.message?.date &&
+    currentDate === lastCheckInData?.message?.date &&
     lastCheckInData?.message?.last_action === 2
   )
     throw new Error("Today you have already checkout before");
