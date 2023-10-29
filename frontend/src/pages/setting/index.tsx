@@ -16,6 +16,17 @@ const SettingPage = () => {
   const [config] = useConfigStore((store) => [store.config]);
 
   const expires = format(new Date(config.expires * 1000), "yyyy-MM-dd");
+  const parseCron = (cron = "") => {
+    const cronInArr = cron.split(" ");
+    if (cronInArr.length === 0) {
+      return undefined;
+    }
+    const min =
+      cronInArr?.[0]?.length === 1 ? `0${cronInArr?.[0]}` : cronInArr?.[0];
+    const hour =
+      cronInArr?.[1]?.length === 1 ? `0${cronInArr?.[1]}` : cronInArr?.[1];
+    return `${hour}:${min}`;
+  };
 
   return (
     <Box>
@@ -53,6 +64,14 @@ const SettingPage = () => {
           <FormLabel color={"grey"}>Message</FormLabel>
           <Input value={config.in.message} />
         </FormControl>
+        <FormControl mt={4}>
+          <FormLabel color={"grey"}>Time</FormLabel>
+          <Input
+            type="time"
+            value={parseCron(config?.cronIn)}
+            onChange={console.log}
+          />
+        </FormControl>
 
         <Divider mt={6} color={"grey"} />
         <Box mt={4} fontWeight={500} fontSize={18} color={"grey"}>
@@ -77,6 +96,14 @@ const SettingPage = () => {
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Message</FormLabel>
           <Input value={config.out.message} />
+        </FormControl>
+        <FormControl mt={4}>
+          <FormLabel color={"grey"}>Time</FormLabel>
+          <Input
+            type="time"
+            value={parseCron(config?.cronOut)}
+            onChange={console.log}
+          />
         </FormControl>
         <Divider mt={6} color={"grey"} />
         <FormControl mt={4}>
