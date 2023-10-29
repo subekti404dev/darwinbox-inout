@@ -1,41 +1,69 @@
 import path from "path";
 import { IStore } from "./interface";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
-const root = process.cwd();
-const fileDir = path.join(root, "data");
-const fileNameCfg = "config.json";
-const filePathCfg = path.join(fileDir, fileNameCfg);
+import {
+  PathOrFileDescriptor,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from "fs";
+import { formatRFC3339 } from "date-fns";
+
+const dataDir = path.join(process.cwd(), "data");
+const filePathCfg = path.join(dataDir, "config.json");
+const filePathLog = path.join(dataDir, "logs.json");
 
 export class InMemoryStore implements IStore {
   private _cfgData: any = {};
+  private _logs: any = [];
   constructor(defaultValue = {}) {
     this.initConfig(defaultValue);
   }
 
-  private writeToFileCfg() {
-    writeFileSync(filePathCfg, JSON.stringify(this._cfgData, null, 3));
+  private writeToFile(file: PathOrFileDescriptor, data: any) {
+    writeFileSync(file, JSON.stringify(data, null, 3));
   }
 
-  private loadFromFileCfg() {
-    this._cfgData = JSON.parse(readFileSync(filePathCfg, "utf-8") || "{}");
+  private loadFromFileCfg(file: PathOrFileDescriptor, defaultValue: any) {
+    return JSON.parse(readFileSync(file, "utf-8") || defaultValue);
   }
 
   private initConfig(defaultValue: any = {}) {
-    if (!existsSync(fileDir)) mkdirSync(fileDir, { recursive: true });
+    if (!existsSync(dataDir)) mkdirSync(dataDir, { recursive: true });
     if (!existsSync(filePathCfg)) {
       this._cfgData = defaultValue;
-      this.writeToFileCfg();
+      this.writeToFile(filePathCfg, this._cfgData);
     } else {
-      this.loadFromFileCfg();
+      this._cfgData = this.loadFromFileCfg(filePathCfg, "{}");
+    }
+    if (!existsSync(filePathLog)) {
+      this.writeToFile(filePathLog, this._logs);
+    } else {
+      this._logs = this.loadFromFileCfg(filePathLog, "[]");
     }
   }
 
   public setConfigData(data: any) {
     this._cfgData = { ...this._cfgData, ...data };
-    this.writeToFileCfg();
+    this.writeToFile(filePathCfg, this._cfgData);
   }
 
   public getConfigData() {
     return this._cfgData;
+  }
+
+  public addLogData(logData: any) {
+    this._logs = [
+      {
+        date: formatRFC3339(new Date()),
+        ...logData,
+      },
+      ...this._logs,
+    ];
+    this.writeToFile(filePathLog, this._logs);
+  }
+
+  public getLogData() {
+    return this._logs;
   }
 }

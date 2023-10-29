@@ -1,4 +1,3 @@
-import express, { Request, Response } from "express";
 import cron from "node-cron";
 import { checkin, checkout } from "../services/darwin.service";
 import { storeData } from "./store";
@@ -10,6 +9,11 @@ let jobClockOut: cron.ScheduledTask | null = null;
 
 let cronIn: string | null;
 let cronOut: string | null;
+
+export enum CheckType {
+  In = "checkin",
+  Out = "checkout",
+}
 
 const isSkipToday = async () => {
   // skip weekend
@@ -41,9 +45,22 @@ export const startJob = (start: string, end: string) => {
     console.log(payload);
     try {
       await checkin(payload);
-    } catch (error) {
+      storeData.addLogData({
+        ...payload,
+        type: CheckType.In,
+        status: 200,
+        errMsg: null,
+      });
+    } catch (error: any) {
       const errMsg = errParser(error);
-      console.log(`[Error]: ${errMsg}`);
+      const reqStatus = error?.response?.status;
+      storeData.addLogData({
+        ...payload,
+        type: CheckType.In,
+        status: reqStatus,
+        errMsg,
+      });
+      console.log(`[Error]${reqStatus && `[${reqStatus}]`}: ${errMsg}`);
     }
   });
   jobClockOut = cron.schedule(cronOut, async () => {
@@ -59,9 +76,22 @@ export const startJob = (start: string, end: string) => {
     console.log(payload);
     try {
       await checkout(payload);
-    } catch (error) {
+      storeData.addLogData({
+        ...payload,
+        type: CheckType.Out,
+        status: 200,
+        errMsg: null,
+      });
+    } catch (error: any) {
       const errMsg = errParser(error);
-      console.log(`[Error]: ${errMsg}`);
+      const reqStatus = error?.response?.status;
+      storeData.addLogData({
+        ...payload,
+        type: CheckType.Out,
+        status: reqStatus,
+        errMsg,
+      });
+      console.log(`[Error]${reqStatus && `[${reqStatus}]`}: ${errMsg}`);
     }
   });
   jobClockIn.start();
