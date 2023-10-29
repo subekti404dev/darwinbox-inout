@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   useColorModeValue,
@@ -68,7 +69,7 @@ const App = () => {
   }, [config.token]);
 
   useEffect(() => {
-    if (isTokenAlive) {
+    if (!isTokenAlive) {
       toast({
         status: "error",
         title: "Token Invalid, Please Relogin!",
