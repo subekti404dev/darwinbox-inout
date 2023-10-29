@@ -10,7 +10,7 @@ const useLoginData = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get("/darwin/login-data");
-      setData(res.data);
+      setData(res.data?.data);
     } catch (error) {
       console.log(error);
     }
