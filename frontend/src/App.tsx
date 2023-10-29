@@ -4,6 +4,7 @@ import {
   Drawer,
   DrawerContent,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import SidebarContent from "./components/sidebar";
 import MobileNav from "./components/mobile-nav";
@@ -26,6 +27,7 @@ const menus: Array<MenuItemsProps> = [
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeMenuIndex, setActiveMenuIndex] = useState(0);
+  const toast = useToast();
 
   const Page = menus[activeMenuIndex].component;
   const [
@@ -47,10 +49,12 @@ const App = () => {
   console.log({ isCheckingToken, isTokenAlive });
 
   useEffect(() => {
-    const secondsTimer = setInterval(() => {
-      checkToken();
-    }, 10 * 1000);
-    return () => clearInterval(secondsTimer);
+    if (config.token) {
+      const secondsTimer = setInterval(() => {
+        checkToken();
+      }, 10 * 1000);
+      return () => clearInterval(secondsTimer);
+    }
   }, [lastCheckToken]);
 
   useEffect(() => {
@@ -62,6 +66,16 @@ const App = () => {
       checkToken();
     }
   }, [config.token]);
+
+  useEffect(() => {
+    if (isTokenAlive) {
+      toast({
+        status: "error",
+        title: "Token Invalid, Please Relogin!",
+        isClosable: false,
+      });
+    }
+  }, [isTokenAlive]);
 
   return (
     <Box minH="100vh" w="100vw" bg={useColorModeValue("gray.100", "gray.900")}>
