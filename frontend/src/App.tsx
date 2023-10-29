@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
@@ -15,6 +16,8 @@ import HistoryPage from "./pages/history";
 import SettingPage from "./pages/setting";
 import { useEffect, useState } from "react";
 import { useConfigStore } from "./store/config.store";
+import ModalQR from "./components/modal-qr";
+
 interface MenuItemsProps {
   name: string;
   icon: IconType;
@@ -27,6 +30,11 @@ const menus: Array<MenuItemsProps> = [
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenQRModal,
+    onClose: onCloseQRModal,
+    onOpen: onOpenModalQR,
+  } = useDisclosure();
   const [activeMenuIndex, setActiveMenuIndex] = useState(0);
   const toast = useToast();
 
@@ -34,20 +42,20 @@ const App = () => {
   const [
     config,
     fetchConfig,
-    isCheckingToken,
+    // isCheckingToken,
     isTokenAlive,
     lastCheckToken,
     checkToken,
   ] = useConfigStore((store) => [
     store.config,
     store.fetchData,
-    store.isCheckingToken,
+    // store.isCheckingToken,
     store.isTokenAlive,
     store.lastCheckToken,
     store.checkToken,
   ]);
 
-  console.log({ isCheckingToken, isTokenAlive });
+  // console.log({ isCheckingToken, isTokenAlive });
 
   useEffect(() => {
     if (config.token) {
@@ -59,27 +67,32 @@ const App = () => {
   }, [lastCheckToken]);
 
   useEffect(() => {
-    fetchConfig();
+    fetchConfig().then((cfg: any) => {
+      console.log({ cfg });
+
+      if (cfg.token) {
+        checkToken();
+      } else {
+        onOpenModalQR();
+      }
+    });
+    // onOpenModalQR()
   }, []);
 
   useEffect(() => {
-    if (config.token) {
-      checkToken();
-    }
-  }, [config.token]);
-
-  useEffect(() => {
-    if (!isTokenAlive) {
+    if (!isTokenAlive && config.token) {
       toast({
         status: "error",
         title: "Token Invalid, Please Relogin!",
         isClosable: false,
       });
+      onOpenModalQR();
     }
   }, [isTokenAlive]);
 
   return (
     <Box minH="100vh" w="100vw" bg={useColorModeValue("gray.100", "gray.900")}>
+      <ModalQR isOpen={isOpenQRModal} onClose={onCloseQRModal} />
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}

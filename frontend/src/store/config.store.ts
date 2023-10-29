@@ -10,11 +10,13 @@ interface IHistoryStore {
   isCheckingToken: boolean;
   isTokenAlive: boolean;
   lastCheckToken: any;
+  isLoggingIn: boolean;
   fetchData: () => Promise<void>;
   checkToken: () => Promise<void>;
+  doLogin: (qrcode: string) => Promise<void>;
 }
 
-export const useConfigStore = create<IHistoryStore>((set) => ({
+export const useConfigStore = create<IHistoryStore>((set, get) => ({
   config: {},
   user: {},
   loading: false,
@@ -22,6 +24,7 @@ export const useConfigStore = create<IHistoryStore>((set) => ({
   isTokenAlive: false,
   isCheckingToken: false,
   lastCheckToken: null,
+  isLoggingIn: false,
   fetchData: async () => {
     try {
       set({ loading: true, error: null });
@@ -33,6 +36,7 @@ export const useConfigStore = create<IHistoryStore>((set) => ({
         loading: false,
         lastCheckToken: new Date(),
       });
+      return config;
     } catch (error) {
       console.log(error);
       set({ loading: false, error, lastCheckToken: new Date() });
@@ -46,6 +50,22 @@ export const useConfigStore = create<IHistoryStore>((set) => ({
     } catch (error) {
       console.log(error);
       set({ isCheckingToken: false, isTokenAlive: false });
+    }
+  },
+  doLogin: async (qrcode) => {
+    try {
+      set({ isLoggingIn: true });
+      await axiosInstance.post("/darwin/login", {
+        qrcode,
+        host: "efishery.darwinbox.com",
+      });
+      await get().fetchData();
+      await get().checkToken();
+
+      set({ isLoggingIn: false });
+    } catch (error) {
+      console.log(error);
+      set({ isLoggingIn: false });
     }
   },
 }));
