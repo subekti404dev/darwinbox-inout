@@ -45,11 +45,12 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
   },
   checkToken: async () => {
     try {
+      if (get().isCheckingToken) return;
       set({ isCheckingToken: true });
       await axiosInstance.get("/darwin/is-token-alive");
       set({ isCheckingToken: false, isTokenAlive: true });
     } catch (error: any) {
-      console.log(error);
+      // console.log(error.response);
       if ((error as AxiosError)?.response?.status === 401) {
         set({ isCheckingToken: false, isTokenAlive: false });
       }

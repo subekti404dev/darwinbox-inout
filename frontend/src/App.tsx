@@ -61,7 +61,7 @@ const App = () => {
     if (config.token) {
       const secondsTimer = setInterval(() => {
         checkToken();
-      }, 10 * 1000);
+      }, 12 * 1000);
       return () => clearInterval(secondsTimer);
     }
   }, [lastCheckToken]);
@@ -86,7 +86,7 @@ const App = () => {
       });
       onOpenModalQR();
     }
-  }, [isTokenAlive]);
+  }, [isTokenAlive, lastCheckToken]);
 
   return (
     <Box minH="100vh" w="100vw" bg={useColorModeValue("gray.100", "gray.900")}>
