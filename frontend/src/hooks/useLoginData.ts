@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Axios from "axios";
 
 const axios = Axios.create({
-  baseURL: `${import.meta.env.VITE_API_HOST}/v1`,
+  baseURL: `${import.meta.env.VITE_API_HOST || ""}/v1`,
 });
 
 const useLoginData = () => {
