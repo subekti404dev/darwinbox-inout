@@ -7,8 +7,8 @@ RUN npm install && npm run build && ls -lah
 FROM alpine:latest
 WORKDIR /app
 
-COPY --from=builder /app/darwinbox /app/darwinbox
+COPY --from=builder /app/darwinbox /usr/local/bin/darwinbox
 
 EXPOSE ${PORT:-7000}
 
-CMD ["node", "index.cjs"]
+CMD ["darwinbox"]
