@@ -11,13 +11,22 @@ import {
 } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 
-
 interface SidebarProps extends BoxProps {
   onClose: () => void;
   menus?: Array<unknown>;
+  active?: number;
+  setActive?: (val: number) => void;
 }
 
-const SidebarContent = ({ onClose, menus, ...rest }: SidebarProps) => {
+const SidebarContent = ({
+  onClose,
+  menus,
+  active,
+  setActive,
+  ...rest
+}: SidebarProps) => {
+  console.log(active);
+
   return (
     <Box
       transition="3s ease"
@@ -35,8 +44,12 @@ const SidebarContent = ({ onClose, menus, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {(menus || []).map((link: any) => (
-        <NavItem key={link.name} icon={link.icon}>
+      {(menus || []).map((link: any, index: number) => (
+        <NavItem
+          key={link.name}
+          onClick={() => setActive?.(index)}
+          icon={link.icon}
+        >
           {link.name}
         </NavItem>
       ))}
