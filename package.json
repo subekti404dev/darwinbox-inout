@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run clean:build && npx tsc && npm run build:cjs && npm run build:bin",
     "build:cjs": "npx esbuild dist/index.js  --bundle --outfile=dist/build.cjs --format=cjs --platform=node && ncc build dist/build.cjs -o single",
-    "build:bin": "pkg single/index.cjs -o darwinbox --assets  \"react_dist/**/*\"",
+    "build:bin": "pkg single/index.cjs -o darwinbox",
     "clean:build": "rimraf dist/ single/",
     "vercel": "pnpm build && vercel --prod",
     "start": "node dist/index.js",
