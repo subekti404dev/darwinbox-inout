@@ -59,7 +59,7 @@ const ModalQR = ({ isOpen, onClose }: IModalQR) => {
 
         <ModalFooter>
           <Button
-            colorScheme="blue"
+            colorScheme="teal"
             mr={3}
             onClick={onLogin}
             disabled={isLoggingIn && !qrData}

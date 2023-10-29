@@ -68,8 +68,6 @@ const App = () => {
 
   useEffect(() => {
     fetchConfig().then((cfg: any) => {
-      console.log({ cfg });
-
       if (cfg.token) {
         checkToken();
       } else {

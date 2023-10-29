@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
 import axiosInstance from "../utils/axios";
+import { AxiosError } from "axios";
 
 interface IHistoryStore {
   config: any;
@@ -47,9 +48,11 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
       set({ isCheckingToken: true });
       await axiosInstance.get("/darwin/is-token-alive");
       set({ isCheckingToken: false, isTokenAlive: true });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      set({ isCheckingToken: false, isTokenAlive: false });
+      if ((error as AxiosError)?.response?.status === 401) {
+        set({ isCheckingToken: false, isTokenAlive: false });
+      }
     }
   },
   doLogin: async (qrcode) => {
