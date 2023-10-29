@@ -6,14 +6,12 @@ import {
   login,
 } from "../../services/darwin.service";
 import { storeData } from "../../utils/store";
+import { errParser } from "../../utils/errParser";
 
 const router = express.Router();
 
 const handleError = (error: any, res: any) => {
-  const errMsg =
-    error?.response?.data?.message ||
-    (!!error?.response?.data && JSON.stringify(error?.response?.data)) ||
-    error.message;
+  const errMsg = errParser(error)
   res
     .status(error?.response?.status || 400)
     .json({ success: false, message: errMsg });
@@ -38,7 +36,7 @@ router.post("/login", async (req: Request, res: Response) => {
 router.get("/login-data", async (req: Request, res: Response) => {
   res.json({
     success: true,
-    data: storeData.getData(),
+    data: storeData.getConfigData(),
   });
 });
 
@@ -46,10 +44,10 @@ router.post("/set-login-data", async (req: Request, res: Response) => {
   try {
     const data = req.body;
     if (!data.token) throw new Error("invalid data");
-    storeData.setData(data);
+    storeData.setConfigData(data);
     res.json({
       success: true,
-      data: storeData.getData(),
+      data: storeData.getConfigData(),
     });
   } catch (error: any) {
     handleError(error, res);

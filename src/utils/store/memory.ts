@@ -3,39 +3,39 @@ import { IStore } from "./interface";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 const root = process.cwd();
 const fileDir = path.join(root, "data");
-const fileName = "config.json";
-const filePath = path.join(fileDir, fileName);
+const fileNameCfg = "config.json";
+const filePathCfg = path.join(fileDir, fileNameCfg);
 
 export class InMemoryStore implements IStore {
-  private data: any = {};
+  private _cfgData: any = {};
   constructor(defaultValue = {}) {
-    this.init(defaultValue);
+    this.initConfig(defaultValue);
   }
 
-  private writeToFile() {
-    writeFileSync(filePath, JSON.stringify(this.data, null, 3));
+  private writeToFileCfg() {
+    writeFileSync(filePathCfg, JSON.stringify(this._cfgData, null, 3));
   }
 
-  private loadToFile() {
-    this.data = JSON.parse(readFileSync(filePath, "utf-8") || "{}");
+  private loadFromFileCfg() {
+    this._cfgData = JSON.parse(readFileSync(filePathCfg, "utf-8") || "{}");
   }
 
-  private init(defaultValue: any = {}) {
+  private initConfig(defaultValue: any = {}) {
     if (!existsSync(fileDir)) mkdirSync(fileDir, { recursive: true });
-    if (!existsSync(filePath)) {
-      this.data = defaultValue;
-      this.writeToFile();
+    if (!existsSync(filePathCfg)) {
+      this._cfgData = defaultValue;
+      this.writeToFileCfg();
     } else {
-      this.loadToFile();
+      this.loadFromFileCfg();
     }
   }
 
-  public setData(data: any) {
-    this.data = { ...this.data, ...data };
-    this.writeToFile();
+  public setConfigData(data: any) {
+    this._cfgData = { ...this._cfgData, ...data };
+    this.writeToFileCfg();
   }
 
-  public getData() {
-    return this.data;
+  public getConfigData() {
+    return this._cfgData;
   }
 }

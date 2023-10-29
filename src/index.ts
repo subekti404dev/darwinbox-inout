@@ -7,7 +7,7 @@ import v1Routes from "./routes/v1";
 import { storeData } from "./utils/store";
 import { startJob } from "./utils/job";
 
-const data = storeData.getData()
+const data = storeData.getConfigData()
 if (data?.cronIn && data?.cronOut) {
   startJob(data?.cronIn, data?.cronOut);
 }

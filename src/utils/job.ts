@@ -3,6 +3,7 @@ import cron from "node-cron";
 import { checkin, checkout } from "../services/darwin.service";
 import { storeData } from "./store";
 import { currentDayName } from "./day";
+import { errParser } from "./errParser";
 
 let jobClockIn: cron.ScheduledTask | null = null;
 let jobClockOut: cron.ScheduledTask | null = null;
@@ -24,12 +25,12 @@ export const startJob = (start: string, end: string) => {
   stopJob();
   cronIn = start || "0 9 * * *"; // 09:00 | UTC + 7
   cronOut = end || "0 18 * * *"; // 18:00 | UTC + 7
-  const currData = storeData.getData();
-  storeData.setData({ ...currData, cronIn, cronOut });
+  const currData = storeData.getConfigData();
+  storeData.setConfigData({ ...currData, cronIn, cronOut });
 
   jobClockIn = cron.schedule(cronIn, async () => {
     if (await isSkipToday()) return;
-    const data = storeData.getData();
+    const data = storeData.getConfigData();
     const payload = {
       location_type: data?.in?.type,
       location: data?.in?.location,
@@ -38,11 +39,16 @@ export const startJob = (start: string, end: string) => {
     };
     console.log(`[${new Date()}]: run job clockin`);
     console.log(payload);
-    checkin(payload);
+    try {
+      await checkin(payload);
+    } catch (error) {
+      const errMsg = errParser(error);
+      console.log(`[Error]: ${errMsg}`);
+    }
   });
   jobClockOut = cron.schedule(cronOut, async () => {
     if (await isSkipToday()) return;
-    const data = storeData.getData();
+    const data = storeData.getConfigData();
     const payload = {
       location_type: data?.out?.type,
       location: data?.out?.location,
@@ -51,7 +57,12 @@ export const startJob = (start: string, end: string) => {
     };
     console.log(`[${new Date()}]: run job clockout`);
     console.log(payload);
-    checkout(payload);
+    try {
+      await checkout(payload);
+    } catch (error) {
+      const errMsg = errParser(error);
+      console.log(`[Error]: ${errMsg}`);
+    }
   });
   jobClockIn.start();
   jobClockOut.start();
@@ -75,7 +86,7 @@ export const stopJob = () => {
     jobClockOut = null;
     cronOut = null;
   }
-  storeData.setData({ ...storeData.getData(), cronIn, cronOut });
+  storeData.setConfigData({ ...storeData.getConfigData(), cronIn, cronOut });
 };
 
 export const statusJob = () => {
