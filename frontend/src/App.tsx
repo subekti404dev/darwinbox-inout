@@ -58,9 +58,9 @@ const App = () => {
   // console.log({ isCheckingToken, isTokenAlive });
 
   useEffect(() => {
-    if (config.token) {
+    if (config.token && lastCheckToken) {
       const secondsTimer = setInterval(() => {
-        checkToken();
+        checkToken({});
       }, 12 * 1000);
       return () => clearInterval(secondsTimer);
     }
@@ -69,12 +69,11 @@ const App = () => {
   useEffect(() => {
     fetchConfig().then((cfg: any) => {
       if (cfg.token) {
-        checkToken();
+        checkToken({});
       } else {
         onOpenModalQR();
       }
     });
-    // onOpenModalQR()
   }, []);
 
   useEffect(() => {
@@ -86,7 +85,7 @@ const App = () => {
       });
       onOpenModalQR();
     }
-  }, [isTokenAlive, lastCheckToken]);
+  }, [isTokenAlive]);
 
   return (
     <Box minH="100vh" w="100vw" bg={useColorModeValue("gray.100", "gray.900")}>
