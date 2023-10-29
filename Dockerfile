@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 RUN cd frontend && npm install && npm run build \
     &&  cp -R ./dist /app/react_dist
-RUN npm install && npm run build && ls -lah
+RUN npm install && npm run build
 
 FROM alpine:latest
 WORKDIR /app
