@@ -4,3 +4,5 @@ data/
 single/
 .vercel
 .env
+src/frontend/
+react_dist/

@@ -3,3 +3,4 @@ dist/
 node_modules/
 data/
 single/
+react_dist/
