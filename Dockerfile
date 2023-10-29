@@ -4,10 +4,10 @@ WORKDIR /app
 COPY . .
 RUN npm install && npm run build && ls -lah
 
-FROM node:16-alpine
+FROM alpine:latest
 WORKDIR /app
 
-COPY --from=builder /app/single/index.cjs /app/index.cjs
+COPY --from=builder /app/darwinbox /app/darwinbox
 
 EXPOSE ${PORT:-7000}
 

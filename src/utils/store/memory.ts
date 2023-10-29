@@ -1,8 +1,8 @@
 import path from "path";
 import { IStore } from "./interface";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
-import appRoot from "app-root-path";
-const fileDir = path.join(appRoot.path, "data");
+const root = process.cwd();
+const fileDir = path.join(root, "data");
 const fileName = "config.json";
 const filePath = path.join(fileDir, fileName);
 
