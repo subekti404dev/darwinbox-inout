@@ -1,7 +1,12 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Card } from "@chakra-ui/react";
 
 const SettingPage = () => {
-  return <Box>Setting</Box>;
+  return (
+    <Box>
+      <div>Setting</div>
+      <Card marginTop={2} padding={8}>tesr</Card>
+    </Box>
+  );
 };
 
 export default SettingPage;

@@ -1,22 +1,23 @@
 import {
   IconButton,
-  //   Avatar,
-  //   Box,
+  Avatar,
+  // Box,
   Flex,
   HStack,
-  //   VStack,
+  VStack,
   useColorModeValue,
   Text,
   FlexProps,
-  //   Menu,
-  //   MenuButton,
-  //   MenuDivider,
-  //   MenuItem,
-  //   MenuList,
+  Menu,
+  MenuButton,
+  // MenuDivider,
+  // MenuItem,
+  // MenuList,
 } from "@chakra-ui/react";
 import {
   FiMenu,
-  //  FiBell, FiChevronDown
+  // FiBell,
+  // FiChevronDown,
 } from "react-icons/fi";
 
 interface MobileProps extends FlexProps {
@@ -59,7 +60,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
           variant="ghost"
           aria-label="open menu"
           icon={<FiBell />}
-        />
+        /> */}
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton
@@ -80,17 +81,17 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Justina Clark</Text>
+                  <Text fontSize="sm">User</Text>
                   <Text fontSize="xs" color="gray.600">
                     Admin
                   </Text>
                 </VStack>
-                <Box display={{ base: "none", md: "flex" }}>
+                {/* <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />
-                </Box>
+                </Box> */}
               </HStack>
             </MenuButton>
-            <MenuList
+            {/* <MenuList
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
@@ -99,9 +100,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
               <MenuItem>Sign out</MenuItem>
-            </MenuList>
+            </MenuList> */}
           </Menu>
-        </Flex> */}
+        </Flex>
       </HStack>
     </Flex>
   );

@@ -36,43 +36,47 @@ const data: IData[] = [
 const HistoryPage = () => {
   return (
     <Box>
-      <Card>
-        <TableContainer>
-          <Table variant={"striped"}>
-            <Thead>
-              <Tr>
-                <Th>Date</Th>
-                <Th>Type</Th>
-                <Th>Location</Th>
-                <Th>Message</Th>
-                <Th>Status</Th>
-                <Th>Err Msg</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {data.map((d, i) => {
-                return (
-                  <Tr key={i}>
-                    <Td>{d.date}</Td>
-                    <Td>{d.type}</Td>
-                    <Td>
-                      <div>
-                        <div>{d.locationType}</div>
-                        <div>{d.location}</div>
-                        <div>{d.latlng}</div>
-                      </div>
-                    </Td>
-                    <Td>{d.message}</Td>
-                    <Td>{d.status}</Td>
-                    <Td>{d.errMsg}</Td>
+      <Box>
+        <div>History</div>
+        <Card marginTop={2} padding={8}>
+          <Card>
+            <TableContainer>
+              <Table variant={"striped"}>
+                <Thead>
+                  <Tr>
+                    <Th>Date</Th>
+                    <Th>Type</Th>
+                    <Th>Location</Th>
+                    <Th>Message</Th>
+                    <Th>Status</Th>
+                    <Th>Err Msg</Th>
                   </Tr>
-                );
-              })}
-            </Tbody>
-           
-          </Table>
-        </TableContainer>
-      </Card>
+                </Thead>
+                <Tbody>
+                  {data.map((d, i) => {
+                    return (
+                      <Tr key={i}>
+                        <Td>{d.date}</Td>
+                        <Td>{d.type}</Td>
+                        <Td>
+                          <div>
+                            <div>{d.locationType}</div>
+                            <div>{d.location}</div>
+                            <div>{d.latlng}</div>
+                          </div>
+                        </Td>
+                        <Td>{d.message}</Td>
+                        <Td>{d.status}</Td>
+                        <Td>{d.errMsg}</Td>
+                      </Tr>
+                    );
+                  })}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          </Card>
+        </Card>
+      </Box>
     </Box>
   );
 };
