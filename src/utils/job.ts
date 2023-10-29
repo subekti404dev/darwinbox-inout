@@ -36,7 +36,7 @@ export const startJob = (start: string, end: string) => {
     if (await isSkipToday()) return;
     const data = storeData.getConfigData();
     const payload = {
-      location_type: data?.in?.type,
+      locationType: data?.in?.type,
       location: data?.in?.location,
       latlng: data?.in?.latlng,
       message: data?.in?.message,
@@ -67,7 +67,7 @@ export const startJob = (start: string, end: string) => {
     if (await isSkipToday()) return;
     const data = storeData.getConfigData();
     const payload = {
-      location_type: data?.out?.type,
+      locationType: data?.out?.type,
       location: data?.out?.location,
       latlng: data?.out?.latlng,
       message: data?.out?.message,
