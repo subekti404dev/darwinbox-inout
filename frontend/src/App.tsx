@@ -12,6 +12,7 @@ import { IconType } from "react-icons";
 import HistoryPage from "./pages/history";
 import SettingPage from "./pages/setting";
 import { useState } from "react";
+import useLoginData from "./hooks/useLoginData";
 
 interface MenuItemsProps {
   name: string;
@@ -28,6 +29,9 @@ const App = () => {
   const [activeMenuIndex, setActiveMenuIndex] = useState(0);
 
   const Page = menus[activeMenuIndex].component;
+
+  const { data } = useLoginData();
+  console.log({ data });
 
   return (
     <Box minH="100vh" w="100vw" bg={useColorModeValue("gray.100", "gray.900")}>
