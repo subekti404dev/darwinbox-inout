@@ -40,6 +40,13 @@ router.get("/login-data", async (req: Request, res: Response) => {
   });
 });
 
+router.get("/histories", async (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    data: storeData.getLogData(),
+  });
+});
+
 router.post("/set-login-data", async (req: Request, res: Response) => {
   try {
     const data = req.body;

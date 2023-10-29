@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -9,37 +10,36 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-
-interface IData {
-  date: string;
-  locationType: number;
-  location: string;
-  latlng: string;
-  message: string;
-  type: string;
-  status: number;
-  errMsg?: string | null;
-}
-const data: IData[] = [
-  {
-    date: "2019-10-12T07:20:50.52Z",
-    locationType: 1,
-    location: "Starbuck",
-    latlng: "168,7",
-    message: "",
-    type: "checkin",
-    status: 200,
-    errMsg: null,
-  },
-];
+import { useHistoryStore } from "../../store/history.store";
+import { useEffect } from "react";
 
 const HistoryPage = () => {
+  const [loading, histories, fetchData] = useHistoryStore((store) => [
+    store.loading,
+    store.histories,
+    store.fetchData,
+  ]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <Box>
       <Box>
         <div>History</div>
         <Card marginTop={2} padding={8}>
-          <Card>
+          {loading && (
+            <Box
+              width={"100%"}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Spinner />
+            </Box>
+          )}
+          {!loading && (
             <TableContainer>
               <Table variant={"striped"}>
                 <Thead>
@@ -53,7 +53,7 @@ const HistoryPage = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {data.map((d, i) => {
+                  {histories.map((d, i) => {
                     return (
                       <Tr key={i}>
                         <Td>{d.date}</Td>
@@ -73,8 +73,19 @@ const HistoryPage = () => {
                   })}
                 </Tbody>
               </Table>
+              {histories.length === 0 && (
+                <Box
+                  display={"flex"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  width={"100%"}
+                  height={200}
+                >
+                  No Data
+                </Box>
+              )}
             </TableContainer>
-          </Card>
+          )}
         </Card>
       </Box>
     </Box>

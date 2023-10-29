@@ -11,9 +11,8 @@ import { FiFileText, FiSettings } from "react-icons/fi";
 import { IconType } from "react-icons";
 import HistoryPage from "./pages/history";
 import SettingPage from "./pages/setting";
-import { useState } from "react";
-import useLoginData from "./hooks/useLoginData";
-
+import { useEffect, useState } from "react";
+import { useConfigStore } from "./store/config.store";
 interface MenuItemsProps {
   name: string;
   icon: IconType;
@@ -29,9 +28,11 @@ const App = () => {
   const [activeMenuIndex, setActiveMenuIndex] = useState(0);
 
   const Page = menus[activeMenuIndex].component;
+  const [fetchConfig] = useConfigStore((store) => [store.fetchData]);
 
-  const { data } = useLoginData();
-  console.log({ data });
+  useEffect(() => {
+    fetchConfig();
+  }, []);
 
   return (
     <Box minH="100vh" w="100vw" bg={useColorModeValue("gray.100", "gray.900")}>
