@@ -28,11 +28,40 @@ const App = () => {
   const [activeMenuIndex, setActiveMenuIndex] = useState(0);
 
   const Page = menus[activeMenuIndex].component;
-  const [fetchConfig] = useConfigStore((store) => [store.fetchData]);
+  const [
+    config,
+    fetchConfig,
+    isCheckingToken,
+    isTokenAlive,
+    lastCheckToken,
+    checkToken,
+  ] = useConfigStore((store) => [
+    store.config,
+    store.fetchData,
+    store.isCheckingToken,
+    store.isTokenAlive,
+    store.lastCheckToken,
+    store.checkToken,
+  ]);
+
+  console.log({ isCheckingToken, isTokenAlive });
+
+  useEffect(() => {
+    const secondsTimer = setInterval(() => {
+      checkToken();
+    }, 10 * 1000);
+    return () => clearInterval(secondsTimer);
+  }, [lastCheckToken]);
 
   useEffect(() => {
     fetchConfig();
   }, []);
+
+  useEffect(() => {
+    if (config.token) {
+      checkToken();
+    }
+  }, [config.token]);
 
   return (
     <Box minH="100vh" w="100vw" bg={useColorModeValue("gray.100", "gray.900")}>

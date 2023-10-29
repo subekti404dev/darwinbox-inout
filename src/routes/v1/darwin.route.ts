@@ -11,7 +11,7 @@ import { errParser } from "../../utils/errParser";
 const router = express.Router();
 
 const handleError = (error: any, res: any) => {
-  const errMsg = errParser(error)
+  const errMsg = errParser(error);
   res
     .status(error?.response?.status || 400)
     .json({ success: false, message: errMsg });
@@ -67,6 +67,18 @@ router.get("/last-checkin", async (req: Request, res: Response) => {
     res.json({
       success: true,
       data,
+    });
+  } catch (error) {
+    handleError(error, res);
+  }
+});
+
+router.get("/is-token-alive", async (req: Request, res: Response) => {
+  try {
+    await getLastCheckin();
+    res.json({
+      success: true,
+      message: "Token Alive",
     });
   } catch (error) {
     handleError(error, res);
