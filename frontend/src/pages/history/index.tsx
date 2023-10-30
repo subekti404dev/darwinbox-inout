@@ -81,7 +81,9 @@ const HistoryPage = () => {
                               <Tag colorScheme="purple">{locationType}</Tag>
                             </div>
                             <div>{d.location}</div>
-                            <div>{d.latlng}</div>
+                            <Box fontSize={14} color={"grey"}>
+                              {d.latlng}
+                            </Box>
                           </div>
                         </Td>
                         <Td>{d.message}</Td>
