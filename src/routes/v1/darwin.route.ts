@@ -7,6 +7,7 @@ import {
 } from "../../services/darwin.service";
 import { storeData } from "../../utils/store";
 import { errParser } from "../../utils/errParser";
+import { startJob, stopJob } from "../../utils/job";
 
 const router = express.Router();
 
@@ -52,6 +53,11 @@ router.post("/set-login-data", async (req: Request, res: Response) => {
     const data = req.body;
     if (!data.token) throw new Error("invalid data");
     storeData.setConfigData(data);
+    if (data.scheduler) {
+      startJob();
+    } else {
+      stopJob();
+    }
     res.json({
       success: true,
       data: storeData.getConfigData(),

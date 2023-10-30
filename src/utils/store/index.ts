@@ -13,6 +13,7 @@ const defaultLocation = {
     latlng: "-6.9267329,107.6365366",
     message: "",
   },
+  scheduler: false
 };
 
 export const storeData = new InMemoryStore(defaultLocation);

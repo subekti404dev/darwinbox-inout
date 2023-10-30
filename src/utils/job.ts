@@ -25,14 +25,14 @@ const isSkipToday = async () => {
   return false;
 };
 
-export const startJob = (start: string, end: string) => {
+export const startJob = (start?: string, end?: string) => {
   stopJob();
-  cronIn = start || "0 9 * * *"; // 09:00 | UTC + 7
-  cronOut = end || "0 18 * * *"; // 18:00 | UTC + 7
   const currData = storeData.getConfigData();
-  storeData.setConfigData({ ...currData, cronIn, cronOut });
+  cronIn = start || currData.cronIn || "0 9 * * *"; // 09:00 | UTC + 7
+  cronOut = end || currData.cronOut || "0 18 * * *"; // 18:00 | UTC + 7
+  storeData.setConfigData({ ...currData, cronIn, cronOut, scheduler: true });
 
-  jobClockIn = cron.schedule(cronIn, async () => {
+  jobClockIn = cron.schedule(cronIn as string, async () => {
     if (await isSkipToday()) return;
     const data = storeData.getConfigData();
     const payload = {
@@ -63,7 +63,7 @@ export const startJob = (start: string, end: string) => {
       console.log(`[Error]${reqStatus && `[${reqStatus}]`}: ${errMsg}`);
     }
   });
-  jobClockOut = cron.schedule(cronOut, async () => {
+  jobClockOut = cron.schedule(cronOut as string, async () => {
     if (await isSkipToday()) return;
     const data = storeData.getConfigData();
     const payload = {
@@ -116,7 +116,12 @@ export const stopJob = () => {
     jobClockOut = null;
     cronOut = null;
   }
-  storeData.setConfigData({ ...storeData.getConfigData(), cronIn, cronOut });
+  storeData.setConfigData({
+    ...storeData.getConfigData(),
+    cronIn,
+    cronOut,
+    scheduler: false,
+  });
 };
 
 export const statusJob = () => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Button,
@@ -7,13 +8,29 @@ import {
   FormLabel,
   Input,
   Select,
+  Spinner,
   Switch,
 } from "@chakra-ui/react";
 import { useConfigStore } from "../../store/config.store";
 import { format } from "date-fns";
+import { useEffect, useState } from "react";
 
 const SettingPage = () => {
-  const [config] = useConfigStore((store) => [store.config]);
+  const [config, doUpdate, isUpdating] = useConfigStore((store) => [
+    store.config,
+    store.doUpdate,
+    store.isUpdating,
+  ]);
+  const [payload, setPayload] = useState<any>({});
+
+  useEffect(() => {
+    const payload = mapConfigToPayload(config);
+    setPayload(payload);
+  }, [config]);
+
+  // useEffect(() => {
+  //   console.log(payload);
+  // }, [payload]);
 
   const expires = format(new Date(config.expires * 1000), "yyyy-MM-dd");
   const parseCron = (cron = "") => {
@@ -26,6 +43,31 @@ const SettingPage = () => {
     const hour =
       cronInArr?.[1]?.length === 1 ? `0${cronInArr?.[1]}` : cronInArr?.[1];
     return `${hour}:${min}`;
+  };
+  const formatCron = (time = "") => {
+    const timeArr = time.split(":");
+    if (timeArr.length < 2) return null;
+    return `${timeArr[1]} ${timeArr[0]} * * *`;
+  };
+
+  const mapConfigToPayload = (cfg: any) => {
+    return {
+      in: {
+        type: cfg?.in?.type,
+        location: cfg?.in?.location,
+        latlng: cfg?.in?.latlng,
+        message: cfg?.in?.message,
+      },
+      out: {
+        type: cfg?.out?.type,
+        location: cfg?.out?.location,
+        latlng: cfg?.out?.latlng,
+        message: cfg?.out?.message,
+      },
+      cronIn: cfg?.cronIn,
+      cronOut: cfg?.cronOut,
+      scheduler: cfg?.scheduler || false,
+    };
   };
 
   return (
@@ -46,7 +88,16 @@ const SettingPage = () => {
         </Box>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Location Type</FormLabel>
-          <Select value={config.in.type}>
+          <Select
+            disabled={isUpdating}
+            value={payload?.in?.type}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                in: { ...(p.in || {}), type: parseInt(e.target.value) },
+              }));
+            }}
+          >
             <option value={1}>Office</option>
             <option value={2}>Home</option>
             <option value={3}>Field Duty</option>
@@ -54,22 +105,55 @@ const SettingPage = () => {
         </FormControl>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Location</FormLabel>
-          <Input value={config.in.location} />
+          <Input
+            disabled={isUpdating}
+            value={payload?.in?.location}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                in: { ...(p.in || {}), location: e.target.value },
+              }));
+            }}
+          />
         </FormControl>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Latlong</FormLabel>
-          <Input value={config.in.latlng} />
+          <Input
+            disabled={isUpdating}
+            value={payload?.in?.latlng}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                in: { ...(p.in || {}), latlng: e.target.value },
+              }));
+            }}
+          />
         </FormControl>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Message</FormLabel>
-          <Input value={config.in.message} />
+          <Input
+            disabled={isUpdating}
+            value={payload?.in?.message}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                in: { ...(p.in || {}), message: e.target.value },
+              }));
+            }}
+          />
         </FormControl>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Time</FormLabel>
           <Input
+            disabled={isUpdating}
             type="time"
-            value={parseCron(config?.cronIn)}
-            onChange={console.log}
+            value={parseCron(payload?.cronIn)}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                cronIn: formatCron(e.target.value),
+              }));
+            }}
           />
         </FormControl>
 
@@ -79,7 +163,16 @@ const SettingPage = () => {
         </Box>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Location Type</FormLabel>
-          <Select value={config.out.type}>
+          <Select
+            disabled={isUpdating}
+            value={payload?.out?.type}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                out: { ...(p.out || {}), type: parseInt(e.target.value) },
+              }));
+            }}
+          >
             <option value={1}>Office</option>
             <option value={2}>Home</option>
             <option value={3}>Field Duty</option>
@@ -87,31 +180,83 @@ const SettingPage = () => {
         </FormControl>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Location</FormLabel>
-          <Input value={config.out.location} />
+          <Input
+            disabled={isUpdating}
+            value={payload?.out?.location}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                out: { ...(p.out || {}), location: e.target.value },
+              }));
+            }}
+          />
         </FormControl>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Latlong</FormLabel>
-          <Input value={config.out.latlng} />
+          <Input
+            disabled={isUpdating}
+            value={payload?.out?.latlng}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                out: { ...(p.out || {}), latlng: e.target.value },
+              }));
+            }}
+          />
         </FormControl>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Message</FormLabel>
-          <Input value={config.out.message} />
+          <Input
+            disabled={isUpdating}
+            value={payload?.out?.message}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                out: { ...(p.out || {}), message: e.target.value },
+              }));
+            }}
+          />
         </FormControl>
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Time</FormLabel>
           <Input
+            disabled={isUpdating}
             type="time"
-            value={parseCron(config?.cronOut)}
-            onChange={console.log}
+            value={parseCron(payload.cronOut)}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                cronOut: formatCron(e.target.value),
+              }));
+            }}
           />
         </FormControl>
         <Divider mt={6} color={"grey"} />
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Scheduler</FormLabel>
-          <Switch size="md" />
+          <Switch
+            disabled={isUpdating}
+            size="md"
+            colorScheme="teal"
+            checked={payload.scheduler}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                scheduler: e.target.checked,
+              }));
+            }}
+          />
         </FormControl>
         <Box mt={6}>
-          <Button colorScheme="teal">Save</Button>
+          <Button
+            colorScheme="teal"
+            disabled={isUpdating}
+            onClick={() => {
+              doUpdate(payload);
+            }}
+          >
+            {isUpdating ? <Spinner /> : "Save"}
+          </Button>
         </Box>
       </Card>
     </Box>

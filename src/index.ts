@@ -9,7 +9,7 @@ import { startJob } from "./utils/job";
 import path from "path";
 
 const data = storeData.getConfigData();
-if (data?.cronIn && data?.cronOut) {
+if (data?.cronIn && data?.cronOut && data.scheduler) {
   startJob(data?.cronIn, data?.cronOut);
 }
 

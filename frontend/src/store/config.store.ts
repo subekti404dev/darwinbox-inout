@@ -15,9 +15,11 @@ interface IHistoryStore {
   isTokenAlive: boolean;
   lastCheckToken: any;
   isLoggingIn: boolean;
+  isUpdating: boolean;
   fetchData: () => Promise<void>;
   checkToken: (params: ICheckTokenParams) => Promise<void>;
   doLogin: (qrcode: string) => Promise<void>;
+  doUpdate: (payload: string) => Promise<void>;
 }
 
 export const useConfigStore = create<IHistoryStore>((set, get) => ({
@@ -29,6 +31,7 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
   isCheckingToken: false,
   lastCheckToken: null,
   isLoggingIn: false,
+  isUpdating: false,
   fetchData: async () => {
     try {
       set({ loading: true, error: null });
@@ -81,6 +84,21 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
     } catch (error) {
       console.log(error);
       set({ isLoggingIn: false });
+      throw error;
+    }
+  },
+  doUpdate: async (payload: any) => {
+    try {
+      set({ isUpdating: true });
+      await axiosInstance.post("/darwin/set-login-data", {
+        ...get().config,
+        payload,
+      });
+
+      set({ isUpdating: false });
+    } catch (error) {
+      console.log(error);
+      set({ isUpdating: false });
       throw error;
     }
   },
