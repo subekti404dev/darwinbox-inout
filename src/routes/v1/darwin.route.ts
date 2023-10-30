@@ -54,7 +54,7 @@ router.post("/set-login-data", async (req: Request, res: Response) => {
     if (!data.token) throw new Error("invalid data");
     storeData.setConfigData(data);
     if (data.scheduler) {
-      startJob();
+      startJob(data.cronIn, data.cronOut);
     } else {
       stopJob();
     }

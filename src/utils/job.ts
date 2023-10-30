@@ -122,7 +122,7 @@ export const stopJob = () => {
     cronOut,
     scheduler: false,
   });
-  console.log(`Job stopped ! [${cronIn}, ${cronOut}]`);
+  console.log(`Job stopped !`);
 };
 
 export const statusJob = () => {
