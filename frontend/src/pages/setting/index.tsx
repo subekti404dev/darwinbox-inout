@@ -30,9 +30,9 @@ const SettingPage = () => {
     setPayload(payload);
   }, [config]);
 
-  // useEffect(() => {
-  //   console.log(payload);
-  // }, [payload]);
+  useEffect(() => {
+    console.log(payload);
+  }, [payload]);
 
   const expires = format(new Date(config.expires * 1000), "yyyy-MM-dd");
   const parseCron = (cron = "") => {
@@ -242,7 +242,7 @@ const SettingPage = () => {
             disabled={isUpdating || !payload.cronIn || !payload.cronOut}
             size="md"
             colorScheme="teal"
-            checked={payload.scheduler}
+            isChecked={payload.scheduler}
             onChange={(e) => {
               setPayload((p: any) => ({
                 ...p,
