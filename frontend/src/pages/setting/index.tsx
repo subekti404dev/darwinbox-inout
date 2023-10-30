@@ -149,6 +149,7 @@ const SettingPage = () => {
           <Input
             disabled={isUpdating}
             type="time"
+            colorScheme="teal"
             value={parseCron(payload?.cronIn)}
             onChange={(e) => {
               setPayload((p: any) => ({
@@ -224,6 +225,7 @@ const SettingPage = () => {
           <Input
             disabled={isUpdating}
             type="time"
+            colorScheme="teal"
             value={parseCron(payload.cronOut)}
             onChange={(e) => {
               setPayload((p: any) => ({
@@ -237,7 +239,7 @@ const SettingPage = () => {
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Scheduler</FormLabel>
           <Switch
-            disabled={isUpdating}
+            disabled={isUpdating || !payload.cronIn || !payload.cronOut}
             size="md"
             colorScheme="teal"
             checked={payload.scheduler}
