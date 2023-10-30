@@ -4,7 +4,7 @@ import axiosInstance from "../utils/axios";
 
 interface IHistory {
   date: string;
-  locationType: number;
+  location_type: number;
   location: string;
   latlng: string;
   message: string;

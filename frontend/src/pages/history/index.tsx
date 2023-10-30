@@ -60,7 +60,7 @@ const HistoryPage = () => {
                         <Td>{d.type}</Td>
                         <Td>
                           <div>
-                            <div>{d.locationType}</div>
+                            <div>{d.location_type}</div>
                             <div>{d.location}</div>
                             <div>{d.latlng}</div>
                           </div>
