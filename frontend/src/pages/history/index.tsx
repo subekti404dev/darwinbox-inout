@@ -4,6 +4,7 @@ import {
   Spinner,
   Table,
   TableContainer,
+  Tag,
   Tbody,
   Td,
   Th,
@@ -12,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useHistoryStore } from "../../store/history.store";
 import { useEffect } from "react";
+import { format } from "date-fns";
 
 const HistoryPage = () => {
   const [loading, histories, fetchData] = useHistoryStore((store) => [
@@ -54,19 +56,42 @@ const HistoryPage = () => {
                 </Thead>
                 <Tbody>
                   {histories.map((d, i) => {
+                    let locationType = "Field Duty";
+                    if (d.location_type === 1) locationType = "Office";
+                    if (d.location_type === 2) locationType = "Home";
                     return (
                       <Tr key={i}>
-                        <Td>{d.date}</Td>
-                        <Td>{d.type}</Td>
+                        <Td>
+                          {format(new Date(d.date), "yyyy-MM-dd HH:mm:ss")}
+                        </Td>
+                        <Td>
+                          {d.type === "checkin" ? (
+                            <Tag colorScheme="orange">
+                              {d.type?.toUpperCase()}
+                            </Tag>
+                          ) : (
+                            <Tag colorScheme="green">
+                              {d.type?.toUpperCase()}
+                            </Tag>
+                          )}
+                        </Td>
                         <Td>
                           <div>
-                            <div>{d.location_type}</div>
+                            <div>
+                              <Tag colorScheme="purple">{locationType}</Tag>
+                            </div>
                             <div>{d.location}</div>
                             <div>{d.latlng}</div>
                           </div>
                         </Td>
                         <Td>{d.message}</Td>
-                        <Td>{d.status}</Td>
+                        <Td>
+                          {d.status === 200 ? (
+                            <Tag colorScheme="teal">Suuccess</Tag>
+                          ) : (
+                            <Tag colorScheme="red">Failed</Tag>
+                          )}
+                        </Td>
                         <Td>{d.errMsg}</Td>
                       </Tr>
                     );

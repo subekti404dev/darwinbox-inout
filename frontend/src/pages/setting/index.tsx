@@ -49,7 +49,7 @@ const SettingPage = () => {
           <Select value={config.in.type}>
             <option value={1}>Office</option>
             <option value={2}>Home</option>
-            <option value={3}>On Duty</option>
+            <option value={3}>Field Duty</option>
           </Select>
         </FormControl>
         <FormControl mt={4}>
@@ -82,7 +82,7 @@ const SettingPage = () => {
           <Select value={config.out.type}>
             <option value={1}>Office</option>
             <option value={2}>Home</option>
-            <option value={3}>On Duty</option>
+            <option value={3}>Field Duty</option>
           </Select>
         </FormControl>
         <FormControl mt={4}>
