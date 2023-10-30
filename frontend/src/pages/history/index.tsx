@@ -89,7 +89,7 @@ const HistoryPage = () => {
                         <Td>{d.message}</Td>
                         <Td>
                           {d.status === 200 ? (
-                            <Tag colorScheme="teal">Suuccess</Tag>
+                            <Tag colorScheme="teal">Success</Tag>
                           ) : (
                             <Tag colorScheme="red">Failed</Tag>
                           )}
