@@ -10,6 +10,7 @@ import {
   Select,
   Spinner,
   Switch,
+  useToast,
 } from "@chakra-ui/react";
 import { useConfigStore } from "../../store/config.store";
 import { format } from "date-fns";
@@ -22,6 +23,7 @@ const SettingPage = () => {
     store.isUpdating,
   ]);
   const [payload, setPayload] = useState<any>({});
+  const toast = useToast();
 
   useEffect(() => {
     const payload = mapConfigToPayload(config);
@@ -251,8 +253,13 @@ const SettingPage = () => {
           <Button
             colorScheme="teal"
             disabled={isUpdating}
-            onClick={() => {
-              doUpdate(payload);
+            onClick={async () => {
+              try {
+                await doUpdate(payload);
+                toast({ title: "Update Successfully", status: "success" });
+              } catch (error) {
+                toast({ title: "Update Failed", status: "error" });
+              }
             }}
           >
             {isUpdating ? <Spinner /> : "Save"}
