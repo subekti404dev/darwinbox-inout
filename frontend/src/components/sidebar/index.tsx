@@ -47,7 +47,10 @@ const SidebarContent = ({
       {(menus || []).map((link: any, index: number) => (
         <NavItem
           key={link.name}
-          onClick={() => setActive?.(index)}
+          onClick={() => {
+            setActive?.(index);
+            onClose?.();
+          }}
           icon={link.icon}
         >
           {link.name}

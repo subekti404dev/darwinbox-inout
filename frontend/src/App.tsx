@@ -88,7 +88,11 @@ const App = () => {
   }, [isTokenAlive]);
 
   return (
-    <Box minH="100vh" w="100vw" bg={useColorModeValue("gray.100", "gray.900")}>
+    <Box
+      minH="100vh"
+      w="calc(100vw - 16px)"
+      bg={useColorModeValue("gray.100", "gray.900")}
+    >
       <ModalQR isOpen={isOpenQRModal} onClose={onCloseQRModal} />
       <SidebarContent
         onClose={() => onClose}
