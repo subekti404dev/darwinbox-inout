@@ -32,12 +32,12 @@ const ModalQR = ({ isOpen, onClose }: IModalQR) => {
   const onLogin = async () => {
     try {
       await doLogin(qrData);
+      onClose();
     } catch (error) {
       console.log(error);
       toast({ title: "Failed to Login", status: "error" });
     } finally {
       setQrData("");
-      onClose();
     }
   };
   return (

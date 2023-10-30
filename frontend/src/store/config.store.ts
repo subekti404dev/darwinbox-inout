@@ -81,6 +81,7 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
     } catch (error) {
       console.log(error);
       set({ isLoggingIn: false });
+      throw error;
     }
   },
 }));
