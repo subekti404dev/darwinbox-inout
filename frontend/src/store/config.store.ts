@@ -92,7 +92,7 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
       set({ isUpdating: true });
       await axiosInstance.post("/darwin/set-login-data", {
         ...get().config,
-        payload,
+        ...payload,
       });
 
       set({ isUpdating: false });
