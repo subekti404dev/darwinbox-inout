@@ -35,7 +35,7 @@ const doDelay = async () => {
   const data = storeData.getConfigData();
   if (data?.randomizeDelay && data?.delay > 0) {
     const randomDelay = Math.floor(Math.random() * (data.delay + 1));
-    console.log("Job random delayed on: ", randomDelay);
+    console.log(`Job random delayed on: ${randomDelay} milisecond`);
     await wait(randomDelay);
   }
 };

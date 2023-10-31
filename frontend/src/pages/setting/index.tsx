@@ -7,6 +7,8 @@ import {
   FormControl,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightAddon,
   Select,
   Spinner,
   Switch,
@@ -26,6 +28,7 @@ const SettingPage = () => {
   ]);
   const [payload, setPayload] = useState<any>({});
   const [tmpHolidayDate, setTmpHoidayDate] = useState<any>();
+  const [tmpDelay, setTmpDelay] = useState<any>(0);
   const [holidays, setHolidays] = useState<any>([]);
   const toast = useToast();
 
@@ -41,6 +44,10 @@ const SettingPage = () => {
   useEffect(() => {
     setPayload((p: any) => ({ ...p, holidays }));
   }, [holidays]);
+
+  useEffect(() => {
+    setPayload((p: any) => ({ ...p, delay: tmpDelay * 60 * 1000 }));
+  }, [tmpDelay]);
 
   const expires = format(new Date(config.expires * 1000), "yyyy-MM-dd");
   const parseCron = (cron = "") => {
@@ -62,6 +69,7 @@ const SettingPage = () => {
 
   const mapConfigToPayload = (cfg: any) => {
     setHolidays(cfg?.holidays || []);
+    setTmpDelay((cfg?.delay || 0) / (1000 * 60));
     return {
       in: {
         type: cfg?.in?.type,
@@ -78,6 +86,7 @@ const SettingPage = () => {
       cronIn: cfg?.cronIn,
       cronOut: cfg?.cronOut,
       scheduler: cfg?.scheduler || false,
+      randomizeDelay: cfg?.randomizeDelay || false,
     };
   };
 
@@ -285,6 +294,36 @@ const SettingPage = () => {
           >
             Add
           </Button>
+        </FormControl>
+        <Divider mt={6} color={"grey"} />
+        <FormControl mt={4}>
+          <FormLabel color={"grey"}>Randomize Delay</FormLabel>
+          <Switch
+            disabled={isUpdating}
+            size="md"
+            colorScheme="teal"
+            isChecked={payload.randomizeDelay}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                randomizeDelay: e.target.checked,
+              }));
+            }}
+          />
+          {payload.randomizeDelay && (
+            <>
+              <FormLabel color={"grey"}>Max Delay</FormLabel>
+
+              <InputGroup mt={2}>
+                <Input
+                  type="number"
+                  value={tmpDelay}
+                  onChange={(e) => setTmpDelay(e.target.value)}
+                />
+                <InputRightAddon children={"menit"} />
+              </InputGroup>
+            </>
+          )}
         </FormControl>
         <Divider mt={6} color={"grey"} />
         <FormControl mt={4}>
