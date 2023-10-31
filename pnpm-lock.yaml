@@ -21,6 +21,7 @@ specifiers:
   pkg: ^5.8.1
   rimraf: ^5.0.5
   typescript: ^4.8.4
+  wait: ^0.4.2
 
 dependencies:
   axios: 0.27.2
@@ -31,6 +32,7 @@ dependencies:
   express: 4.18.2
   node-cron: 3.0.2
   nodejs-base64: 2.0.0
+  wait: 0.4.2
 
 devDependencies:
   '@types/body-parser': 1.19.4
@@ -1845,6 +1847,11 @@ packages:
   /vary/1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+    dev: false
+
+  /wait/0.4.2:
+    resolution: {integrity: sha512-g4Uu25y9MJ3jtBcrRDDXeI/f7lBNtVmNUM3Xd78S19tm1gZutDkL/f6UEcMi/NqWvKZ74Mhrb+4LwpYbjG6XYA==}
+    hasBin: true
     dev: false
 
   /webidl-conversions/3.0.1:

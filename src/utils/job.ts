@@ -1,4 +1,5 @@
 import cron from "node-cron";
+import wait from "wait";
 import { checkin, checkout } from "../services/darwin.service";
 import { storeData } from "./store";
 import { currentDayName } from "./day";
@@ -30,6 +31,15 @@ const isSkipToday = async () => {
   return false;
 };
 
+const doDelay = async () => {
+  const data = storeData.getConfigData();
+  if (data?.randomizeDelay && data?.delay > 0) {
+    const randomDelay = Math.floor(Math.random() * (data.delay + 1));
+    console.log("Job random delayed on: ", randomDelay);
+    await wait(randomDelay);
+  }
+};
+
 export const startJob = (start?: string, end?: string) => {
   stopJob();
   const currData = storeData.getConfigData();
@@ -46,6 +56,10 @@ export const startJob = (start?: string, end?: string) => {
       latlng: data?.in?.latlng,
       message: data?.in?.message,
     };
+
+    // do random delay
+    await doDelay();
+
     console.log(`[${new Date()}]: run job clockin`);
     console.log(payload);
     try {
@@ -77,6 +91,10 @@ export const startJob = (start?: string, end?: string) => {
       latlng: data?.out?.latlng,
       message: data?.out?.message,
     };
+
+    // do random delay
+    await doDelay();
+
     console.log(`[${new Date()}]: run job clockout`);
     console.log(payload);
     try {

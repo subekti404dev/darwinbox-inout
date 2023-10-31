@@ -14,7 +14,9 @@ const defaultLocation = {
     message: "",
   },
   scheduler: false,
-  holidays: []
+  holidays: [],
+  delay: 0,
+  randomizeDelay: false,
 };
 
 export const storeData = new InMemoryStore(defaultLocation);
