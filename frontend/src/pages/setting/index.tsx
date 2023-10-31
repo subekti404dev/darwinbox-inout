@@ -10,6 +10,8 @@ import {
   Select,
   Spinner,
   Switch,
+  Tag,
+  TagCloseButton,
   useToast,
 } from "@chakra-ui/react";
 import { useConfigStore } from "../../store/config.store";
@@ -23,6 +25,8 @@ const SettingPage = () => {
     store.isUpdating,
   ]);
   const [payload, setPayload] = useState<any>({});
+  const [tmpHolidayDate, setTmpHoidayDate] = useState<any>();
+  const [holidays, setHolidays] = useState<any>([]);
   const toast = useToast();
 
   useEffect(() => {
@@ -33,6 +37,10 @@ const SettingPage = () => {
   useEffect(() => {
     console.log(payload);
   }, [payload]);
+
+  useEffect(() => {
+    setPayload((p: any) => ({ ...p, holidays }));
+  }, [holidays]);
 
   const expires = format(new Date(config.expires * 1000), "yyyy-MM-dd");
   const parseCron = (cron = "") => {
@@ -53,6 +61,7 @@ const SettingPage = () => {
   };
 
   const mapConfigToPayload = (cfg: any) => {
+    setHolidays(cfg?.holidays || []);
     return {
       in: {
         type: cfg?.in?.type,
@@ -234,6 +243,48 @@ const SettingPage = () => {
               }));
             }}
           />
+        </FormControl>
+        <Divider mt={6} color={"grey"} />
+        <FormControl mt={4}>
+          <Box mb={2}>
+            {(holidays || []).map((d: string, i: number) => (
+              <Tag mr={1} mb={1} colorScheme="green" key={i}>
+                {d}
+                <TagCloseButton
+                  onClick={() => {
+                    setHolidays((h: any) => {
+                      return h?.filter((x: any) => x !== d);
+                    });
+                  }}
+                />
+              </Tag>
+            ))}
+          </Box>
+          <FormLabel color={"grey"}>Holidays</FormLabel>
+          <Input
+            disabled={isUpdating}
+            type="date"
+            colorScheme="teal"
+            onChange={(e) => {
+              setTmpHoidayDate(e.target.value);
+            }}
+          />
+          <Button
+            mt={2}
+            colorScheme="teal"
+            variant={"outline"}
+            disabled={!tmpHolidayDate}
+            onClick={() => {
+              if (tmpHolidayDate) {
+                console.log("do", tmpHolidayDate);
+                if (!holidays.includes(tmpHolidayDate)) {
+                  setHolidays((h: never[]) => [...h, tmpHolidayDate]);
+                }
+              }
+            }}
+          >
+            Add
+          </Button>
         </FormControl>
         <Divider mt={6} color={"grey"} />
         <FormControl mt={4}>

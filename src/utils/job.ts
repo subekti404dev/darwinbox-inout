@@ -19,7 +19,12 @@ const isSkipToday = async () => {
   // skip weekend
   if (["Sabtu", "Minggu"].includes(currentDayName)) {
     console.log("Skip, today is weekend :)");
+    return true;
+  }
 
+  const currData = storeData.getConfigData();
+  if ((currData?.holidays || []).includes(currentDayName)) {
+    console.log("Skip, today is holidays :)");
     return true;
   }
   return false;
