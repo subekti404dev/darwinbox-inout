@@ -4,6 +4,7 @@ import { checkin, checkout } from "../services/darwin.service";
 import { storeData } from "./store";
 import { currentDayName } from "./day";
 import { errParser } from "./errParser";
+import { millisecondsToMinutes, minutesToMilliseconds } from "date-fns";
 
 let jobClockIn: cron.ScheduledTask | null = null;
 let jobClockOut: cron.ScheduledTask | null = null;
@@ -34,9 +35,12 @@ const isSkipToday = async () => {
 const doDelay = async () => {
   const data = storeData.getConfigData();
   if (data?.randomizeDelay && data?.delay > 0) {
-    const randomDelay = Math.floor(Math.random() * (data.delay + 1));
-    console.log(`Job random delayed on: ${randomDelay} milisecond`);
-    await wait(randomDelay);
+    const delayInMinutes = millisecondsToMinutes(data.delay);
+    const randomDelayInMinutes = Math.floor(
+      Math.random() * (delayInMinutes + 1)
+    );
+    console.log(`Job random delayed on: ${randomDelayInMinutes} minutes`);
+    await wait(minutesToMilliseconds(randomDelayInMinutes));
   }
 };
 
