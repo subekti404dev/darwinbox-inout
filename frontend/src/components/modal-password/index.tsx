@@ -47,6 +47,11 @@ const ModalPassword = ({ isOpen }: IModalPassword) => {
               defaultValue={pass}
               onChange={(e) => setPass(e.target.value)}
               disabled={isLoggingIn}
+              onKeyDown={(e) => {
+                if (e.code === "Enter" || e.key === "Enter") {
+                  onLogin();
+                }
+              }}
             />
           </Box>
         </ModalBody>
