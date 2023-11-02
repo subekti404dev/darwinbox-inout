@@ -20,6 +20,7 @@ specifiers:
   react-icons: ^4.11.0
   typescript: ^5.0.2
   vite: ^4.4.5
+  wait: ^0.4.2
   zustand: ^4.4.4
 
 dependencies:
@@ -32,6 +33,7 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.11.0_react@18.2.0
+  wait: 0.4.2
   zustand: 4.4.4_o5ysialsahsznabqayk7pree4e
 
 devDependencies:
@@ -3400,6 +3402,11 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
+
+  /wait/0.4.2:
+    resolution: {integrity: sha512-g4Uu25y9MJ3jtBcrRDDXeI/f7lBNtVmNUM3Xd78S19tm1gZutDkL/f6UEcMi/NqWvKZ74Mhrb+4LwpYbjG6XYA==}
+    hasBin: true
+    dev: false
 
   /which/2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}

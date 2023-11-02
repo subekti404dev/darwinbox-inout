@@ -35,7 +35,7 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
   fetchData: async () => {
     try {
       set({ loading: true, error: null });
-      const res = await axiosInstance.get("/darwin/login-data");
+      const res = await axiosInstance().get("/darwin/login-data");
       const config = res?.data?.data || {};
       set({
         config,
@@ -52,7 +52,7 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
     try {
       if (get().isCheckingToken) return;
       set({ isCheckingToken: true });
-      await axiosInstance.get("/darwin/is-token-alive");
+      await axiosInstance().get("/darwin/is-token-alive");
       set({
         isCheckingToken: false,
         isTokenAlive: true,
@@ -73,7 +73,7 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
   doLogin: async (qrcode) => {
     try {
       set({ isLoggingIn: true });
-      await axiosInstance.post("/darwin/login", {
+      await axiosInstance().post("/darwin/login", {
         qrcode,
         host: "efishery.darwinbox.com",
       });
@@ -90,7 +90,7 @@ export const useConfigStore = create<IHistoryStore>((set, get) => ({
   doUpdate: async (payload: any) => {
     try {
       set({ isUpdating: true });
-      await axiosInstance.post("/darwin/set-login-data", {
+      await axiosInstance().post("/darwin/set-login-data", {
         ...get().config,
         ...payload,
       });

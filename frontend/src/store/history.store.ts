@@ -27,7 +27,7 @@ export const useHistoryStore = create<IHistoryStore>((set) => ({
   fetchData: async () => {
     try {
       set({ loading: true, error: null });
-      const res = await axiosInstance.get("/darwin/histories");
+      const res = await axiosInstance().get("/darwin/histories");
       set({ histories: res?.data?.data || [], loading: false });
     } catch (error) {
       console.log(error);

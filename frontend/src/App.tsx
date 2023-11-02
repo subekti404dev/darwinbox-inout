@@ -17,6 +17,9 @@ import SettingPage from "./pages/setting";
 import { useEffect, useState } from "react";
 import { useConfigStore } from "./store/config.store";
 import ModalQR from "./components/modal-qr";
+import { useFlagsStore } from "./store/flags.store";
+import ModalPassword from "./components/modal-password";
+import { getToken } from "./utils/axios";
 
 interface MenuItemsProps {
   name: string;
@@ -39,23 +42,38 @@ const App = () => {
   const toast = useToast();
 
   const Page = menus[activeMenuIndex].component;
-  const [
-    config,
-    fetchConfig,
-    // isCheckingToken,
-    isTokenAlive,
-    lastCheckToken,
-    checkToken,
-  ] = useConfigStore((store) => [
-    store.config,
-    store.fetchData,
-    // store.isCheckingToken,
-    store.isTokenAlive,
-    store.lastCheckToken,
-    store.checkToken,
-  ]);
+  const [config, fetchConfig, isTokenAlive, lastCheckToken, checkToken] =
+    useConfigStore((store) => [
+      store.config,
+      store.fetchData,
+      store.isTokenAlive,
+      store.lastCheckToken,
+      store.checkToken,
+    ]);
 
-  // console.log({ isCheckingToken, isTokenAlive });
+  const [flags, isFetchingFlag, isVerified, fetchFlags, showPassModal] =
+    useFlagsStore((store) => [
+      store.flags,
+      store.isFetching,
+      store.isVerified,
+      store.fetch,
+      store.showPassModal,
+    ]);
+
+  const doFetchConfig = async () => {
+    const cfg: any = await fetchConfig();
+    if (cfg.token) {
+      checkToken({});
+    } else {
+      onOpenModalQR();
+    }
+  };
+
+  useEffect(() => {
+    if (isVerified || getToken()) {
+      doFetchConfig();
+    }
+  }, [isVerified, getToken()]);
 
   useEffect(() => {
     if (config.token && lastCheckToken) {
@@ -67,12 +85,8 @@ const App = () => {
   }, [lastCheckToken]);
 
   useEffect(() => {
-    fetchConfig().then((cfg: any) => {
-      if (cfg.token) {
-        checkToken({});
-      } else {
-        onOpenModalQR();
-      }
+    fetchFlags().then((flag: any) => {
+      if (!flag.use_password) doFetchConfig();
     });
   }, []);
 
@@ -87,6 +101,20 @@ const App = () => {
     }
   }, [isTokenAlive]);
 
+  const renderPage = () => {
+    console.log({ isFetchingFlag, flags, isVerified });
+
+    if (isFetchingFlag) return;
+    if (!flags.use_password) {
+      console.log("masuk");
+
+      return <Page />;
+    }
+    if (flags.use_password && getToken()) {
+      return <Page />;
+    }
+  };
+
   return (
     <Box
       minH="100vh"
@@ -94,6 +122,7 @@ const App = () => {
       bg={useColorModeValue("gray.100", "gray.900")}
     >
       <ModalQR isOpen={isOpenQRModal} onClose={onCloseQRModal} />
+      <ModalPassword isOpen={showPassModal} />
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
@@ -118,11 +147,9 @@ const App = () => {
           />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
-        {/* Content */}
-        <Page />
+        {renderPage()}
       </Box>
     </Box>
   );
