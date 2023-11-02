@@ -1,6 +1,6 @@
 import { InMemoryStore } from "./memory";
 
-const defaultLocation = {
+const defaultConfig = {
   in: {
     type: 2,
     location: "Starbucks",
@@ -19,4 +19,4 @@ const defaultLocation = {
   randomizeDelay: false,
 };
 
-export const storeData = new InMemoryStore(defaultLocation);
+export const storeData = new InMemoryStore(defaultConfig);
