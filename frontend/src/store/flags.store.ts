@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
-import axiosInstance, { getToken, setToken } from "../utils/axios";
+import axiosInstance from "../utils/axios";
+import { authToken } from "../utils/token";
 
 interface IFlags {
   use_password: boolean;
@@ -38,7 +39,8 @@ export const useFlagsStore = create<IFlagsStore>((set, get) => ({
         flags,
         isFetching: false,
         fetched: true,
-        ...(!getToken() && flags.use_password && { showPassModal: true }),
+        ...(!authToken.getToken() &&
+          flags.use_password && { showPassModal: true }),
       });
       return flags;
     } catch (error) {
@@ -52,9 +54,9 @@ export const useFlagsStore = create<IFlagsStore>((set, get) => ({
 
       set({ isVerifying: true });
 
-      const res = await axiosInstance().post("/auth/verify", {password});
+      const res = await axiosInstance().post("/auth/verify", { password });
       const token = res?.data?.data?.token;
-      setToken(token);
+      authToken.setToken(token);
       set({ isVerifying: false, showPassModal: false, isVerified: true });
     } catch (error) {
       console.log(error);

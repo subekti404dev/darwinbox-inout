@@ -19,7 +19,7 @@ import { useConfigStore } from "./store/config.store";
 import ModalQR from "./components/modal-qr";
 import { useFlagsStore } from "./store/flags.store";
 import ModalPassword from "./components/modal-password";
-import { getToken } from "./utils/axios";
+import { authToken } from "./utils/token";
 
 interface MenuItemsProps {
   name: string;
@@ -70,10 +70,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (isVerified || getToken()) {
+    if (isVerified || authToken.getToken()) {
       doFetchConfig();
     }
-  }, [isVerified, getToken()]);
+  }, [isVerified, authToken.getToken()]);
 
   useEffect(() => {
     if (config.token && lastCheckToken) {
@@ -102,15 +102,13 @@ const App = () => {
   }, [isTokenAlive]);
 
   const renderPage = () => {
-    console.log({ isFetchingFlag, flags, isVerified });
-
     if (isFetchingFlag) return;
     if (!flags.use_password) {
       console.log("masuk");
 
       return <Page />;
     }
-    if (flags.use_password && getToken()) {
+    if (flags.use_password && authToken.getToken()) {
       return <Page />;
     }
   };

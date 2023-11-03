@@ -1,19 +1,18 @@
 import { createStandaloneToast } from "@chakra-ui/react";
 import Axios from "axios";
-
-export const TOKEN_KEY = "darwin_token";
-export const getToken = () => sessionStorage.getItem(TOKEN_KEY);
-export const setToken = (token: string) =>
-  sessionStorage.setItem(TOKEN_KEY, token);
+import { authToken } from "./token";
 
 const toast = createStandaloneToast();
-const axiosInstance = () =>
-  Axios.create({
+const axiosInstance = () => {
+  const axios = Axios.create({
     baseURL: `${import.meta.env.VITE_API_HOST || ""}/v1`,
     headers: {
-      ...(!!getToken() && { Authorization: `Bearer ${getToken()}` }),
+      ...(!!authToken.getToken() && {
+        Authorization: `Bearer ${authToken.getToken()}`,
+      }),
     },
-  }).interceptors.response.use(
+  });
+  axios.interceptors.response.use(
     (res) => {
       return res;
     },
@@ -27,9 +26,11 @@ const axiosInstance = () =>
         }
       }
       if (!errMsg) errMsg = err.message;
-      toast.toast({ title: errMsg, status: 'error' });
+      toast.toast({ title: errMsg, status: "error" });
       return Promise.reject(err);
     }
   );
+  return axios;
+};
 
 export default axiosInstance;
