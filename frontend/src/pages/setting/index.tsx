@@ -51,8 +51,8 @@ const SettingPage = () => {
 
   const expires = format(new Date(config.expires * 1000), "yyyy-MM-dd");
   const parseCron = (cron = "") => {
-    const cronInArr = cron.split(" ");
-    if (cronInArr.length === 0) {
+    const cronInArr = cron?.split(" ");
+    if (cronInArr?.length === 0) {
       return undefined;
     }
     const min =
@@ -62,8 +62,8 @@ const SettingPage = () => {
     return `${hour}:${min}`;
   };
   const formatCron = (time = "") => {
-    const timeArr = time.split(":");
-    if (timeArr.length < 2) return null;
+    const timeArr = time?.split(":");
+    if (timeArr?.length < 2) return null;
     return `${timeArr[1]} ${timeArr[0]} * * *`;
   };
 

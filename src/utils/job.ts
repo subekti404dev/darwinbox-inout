@@ -146,8 +146,8 @@ export const stopJob = () => {
   }
   storeData.setConfigData({
     ...storeData.getConfigData(),
-    cronIn,
-    cronOut,
+    // cronIn,
+    // cronOut,
     scheduler: false,
   });
   console.log(`Job stopped !`);
