@@ -2,7 +2,7 @@ import cron from "node-cron";
 import wait from "wait";
 import { checkin, checkout } from "../services/darwin.service";
 import { storeData } from "./store";
-import { currentDayName } from "./day";
+import { currentDate, currentDayName } from "./day";
 import { errParser } from "./errParser";
 import { millisecondsToMinutes, minutesToMilliseconds } from "date-fns";
 
@@ -19,13 +19,14 @@ export enum CheckType {
 
 const isSkipToday = async () => {
   // skip weekend
-  if (["Sabtu", "Minggu"].includes(currentDayName)) {
+  if (["Sabtu", "Minggu"].includes(currentDayName())) {
     console.log("Skip, today is weekend :)");
     return true;
   }
 
+  // skip holidays
   const currData = storeData.getConfigData();
-  if ((currData?.holidays || []).includes(currentDayName)) {
+  if ((currData?.holidays || []).includes(currentDate())) {
     console.log("Skip, today is holidays :)");
     return true;
   }
