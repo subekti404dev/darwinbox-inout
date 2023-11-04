@@ -11,12 +11,16 @@ import {
   Menu,
   MenuButton,
   Spinner,
+  useColorMode,
+  Button,
   // MenuDivider,
   // MenuItem,
   // MenuList,
 } from "@chakra-ui/react";
 import {
   FiMenu,
+  FiMoon,
+  FiSun,
   // FiBell,
   // FiChevronDown,
 } from "react-icons/fi";
@@ -31,6 +35,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     store.loading,
     store.user,
   ]);
+  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -67,6 +72,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
           aria-label="open menu"
           icon={<FiBell />}
         /> */}
+        <Button onClick={toggleColorMode} variant={"ghost"} mr={2}>
+          {colorMode === "light" ? <FiMoon size={20} /> : <FiSun size={20} />}
+        </Button>
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton
@@ -78,10 +86,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                 {loading && <Spinner />}
                 {!loading && user && (
                   <>
-                    <Avatar
-                      size={"sm"}
-                      src={user?.pic320}
-                    />
+                    <Avatar size={"sm"} src={user?.pic320} />
                     <VStack
                       display={{ base: "none", md: "flex" }}
                       alignItems="flex-start"
@@ -90,7 +95,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                     >
                       <Text fontSize="sm">{user?.name}</Text>
                       <Text fontSize="xs" color="gray.600">
-                        {(user?.designation || '').split(' (')?.[0]}
+                        {(user?.designation || "").split(" (")?.[0]}
                       </Text>
                     </VStack>
                     {/* <Box display={{ base: "none", md: "flex" }}>

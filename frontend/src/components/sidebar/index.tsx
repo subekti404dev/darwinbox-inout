@@ -25,8 +25,6 @@ const SidebarContent = ({
   setActive,
   ...rest
 }: SidebarProps) => {
-  console.log(active);
-
   return (
     <Box
       transition="3s ease"
@@ -52,6 +50,7 @@ const SidebarContent = ({
             onClose?.();
           }}
           icon={link.icon}
+          isActive={active === index}
         >
           {link.name}
         </NavItem>
@@ -62,10 +61,13 @@ const SidebarContent = ({
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
+  isActive: boolean;
   children: React.ReactNode;
 }
 
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, isActive, children, ...rest }: NavItemProps) => {
+  // console.log({ isActive });
+
   return (
     <Box
       as="a"
@@ -84,6 +86,8 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
           bg: "cyan.400",
           color: "white",
         }}
+        fontWeight={isActive ? "600" : "500"}
+        fontSize={isActive ? "18" : "16"}
         {...rest}
       >
         {icon && (
