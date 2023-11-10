@@ -45,6 +45,31 @@ const doDelay = async () => {
   }
 };
 
+const generatePayload = async (type: "in" | "out") => {
+  const data = storeData.getConfigData();
+  const message = data?.[type]?.message;
+  if (data?.randomizeLocation && data?.locations?.length > 0) {
+    const max = data?.locations?.length - 1;
+    const min = 0;
+    const randomIndex = Math.floor(Math.random() * (max - min + 1) + min);
+    const location = data?.locations?.[randomIndex];
+    if (location) {
+      return {
+        location_type: location?.type,
+        location: location?.location,
+        latlng: location?.latlng,
+        message,
+      };
+    }
+  }
+  return {
+    location_type: data?.[type]?.type,
+    location: data?.[type]?.location,
+    latlng: data?.[type]?.latlng,
+    message,
+  };
+};
+
 export const startJob = (start?: string, end?: string) => {
   stopJob();
   const currData = storeData.getConfigData();
@@ -54,13 +79,7 @@ export const startJob = (start?: string, end?: string) => {
 
   jobClockIn = cron.schedule(cronIn as string, async () => {
     if (await isSkipToday()) return;
-    const data = storeData.getConfigData();
-    const payload = {
-      location_type: data?.in?.type,
-      location: data?.in?.location,
-      latlng: data?.in?.latlng,
-      message: data?.in?.message,
-    };
+    const payload = await generatePayload("in");
 
     // do random delay
     await doDelay();
@@ -89,13 +108,7 @@ export const startJob = (start?: string, end?: string) => {
   });
   jobClockOut = cron.schedule(cronOut as string, async () => {
     if (await isSkipToday()) return;
-    const data = storeData.getConfigData();
-    const payload = {
-      location_type: data?.out?.type,
-      location: data?.out?.location,
-      latlng: data?.out?.latlng,
-      message: data?.out?.message,
-    };
+    const payload = await generatePayload("out");
 
     // do random delay
     await doDelay();
