@@ -3,13 +3,16 @@ import {
   Box,
   Button,
   Card,
+  CloseButton,
   Divider,
   FormControl,
   FormLabel,
+  HStack,
   Input,
   InputGroup,
   InputRightAddon,
   Select,
+  SimpleGrid,
   Spinner,
   Switch,
   Tag,
@@ -29,6 +32,7 @@ const SettingPage = () => {
   const [payload, setPayload] = useState<any>({});
   const [tmpHolidayDate, setTmpHoidayDate] = useState<any>();
   const [tmpDelay, setTmpDelay] = useState<any>(0);
+  const [tmpLocation, setTmpLocation] = useState<any>({ type: 2 });
   const [holidays, setHolidays] = useState<any>([]);
   const toast = useToast();
 
@@ -37,9 +41,9 @@ const SettingPage = () => {
     setPayload(payload);
   }, [config]);
 
-  useEffect(() => {
-    console.log(payload);
-  }, [payload]);
+  // useEffect(() => {
+  //   console.log(tmpLocation);
+  // }, [tmpLocation]);
 
   useEffect(() => {
     setPayload((p: any) => ({ ...p, holidays }));
@@ -87,6 +91,8 @@ const SettingPage = () => {
       cronOut: cfg?.cronOut,
       scheduler: cfg?.scheduler || false,
       randomizeDelay: cfg?.randomizeDelay || false,
+      randomizeLocation: cfg?.randomizeLocation || false,
+      locations: cfg?.locations || [],
     };
   };
 
@@ -106,49 +112,54 @@ const SettingPage = () => {
         <Box mt={4} fontWeight={500} fontSize={18} color={"grey"}>
           Clockin
         </Box>
-        <FormControl mt={4}>
-          <FormLabel color={"grey"}>Location Type</FormLabel>
-          <Select
-            disabled={isUpdating}
-            value={payload?.in?.type}
-            onChange={(e) => {
-              setPayload((p: any) => ({
-                ...p,
-                in: { ...(p.in || {}), type: parseInt(e.target.value) },
-              }));
-            }}
-          >
-            <option value={1}>Office</option>
-            <option value={2}>Home</option>
-            <option value={3}>Field Duty</option>
-          </Select>
-        </FormControl>
-        <FormControl mt={4}>
-          <FormLabel color={"grey"}>Location</FormLabel>
-          <Input
-            disabled={isUpdating}
-            value={payload?.in?.location}
-            onChange={(e) => {
-              setPayload((p: any) => ({
-                ...p,
-                in: { ...(p.in || {}), location: e.target.value },
-              }));
-            }}
-          />
-        </FormControl>
-        <FormControl mt={4}>
-          <FormLabel color={"grey"}>Latlong</FormLabel>
-          <Input
-            disabled={isUpdating}
-            value={payload?.in?.latlng}
-            onChange={(e) => {
-              setPayload((p: any) => ({
-                ...p,
-                in: { ...(p.in || {}), latlng: e.target.value },
-              }));
-            }}
-          />
-        </FormControl>
+
+        {!payload.randomizeLocation && (
+          <>
+            <FormControl mt={4}>
+              <FormLabel color={"grey"}>Location Type</FormLabel>
+              <Select
+                disabled={isUpdating}
+                value={payload?.in?.type}
+                onChange={(e) => {
+                  setPayload((p: any) => ({
+                    ...p,
+                    in: { ...(p.in || {}), type: parseInt(e.target.value) },
+                  }));
+                }}
+              >
+                <option value={1}>Office</option>
+                <option value={2}>Home</option>
+                <option value={3}>Field Duty</option>
+              </Select>
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel color={"grey"}>Location Name</FormLabel>
+              <Input
+                disabled={isUpdating}
+                value={payload?.in?.location}
+                onChange={(e) => {
+                  setPayload((p: any) => ({
+                    ...p,
+                    in: { ...(p.in || {}), location: e.target.value },
+                  }));
+                }}
+              />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel color={"grey"}>Latlong</FormLabel>
+              <Input
+                disabled={isUpdating}
+                value={payload?.in?.latlng}
+                onChange={(e) => {
+                  setPayload((p: any) => ({
+                    ...p,
+                    in: { ...(p.in || {}), latlng: e.target.value },
+                  }));
+                }}
+              />
+            </FormControl>
+          </>
+        )}
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Message</FormLabel>
           <Input
@@ -182,49 +193,53 @@ const SettingPage = () => {
         <Box mt={4} fontWeight={500} fontSize={18} color={"grey"}>
           Clockout
         </Box>
-        <FormControl mt={4}>
-          <FormLabel color={"grey"}>Location Type</FormLabel>
-          <Select
-            disabled={isUpdating}
-            value={payload?.out?.type}
-            onChange={(e) => {
-              setPayload((p: any) => ({
-                ...p,
-                out: { ...(p.out || {}), type: parseInt(e.target.value) },
-              }));
-            }}
-          >
-            <option value={1}>Office</option>
-            <option value={2}>Home</option>
-            <option value={3}>Field Duty</option>
-          </Select>
-        </FormControl>
-        <FormControl mt={4}>
-          <FormLabel color={"grey"}>Location</FormLabel>
-          <Input
-            disabled={isUpdating}
-            value={payload?.out?.location}
-            onChange={(e) => {
-              setPayload((p: any) => ({
-                ...p,
-                out: { ...(p.out || {}), location: e.target.value },
-              }));
-            }}
-          />
-        </FormControl>
-        <FormControl mt={4}>
-          <FormLabel color={"grey"}>Latlong</FormLabel>
-          <Input
-            disabled={isUpdating}
-            value={payload?.out?.latlng}
-            onChange={(e) => {
-              setPayload((p: any) => ({
-                ...p,
-                out: { ...(p.out || {}), latlng: e.target.value },
-              }));
-            }}
-          />
-        </FormControl>
+        {!payload.randomizeLocation && (
+          <>
+            <FormControl mt={4}>
+              <FormLabel color={"grey"}>Location Type</FormLabel>
+              <Select
+                disabled={isUpdating}
+                value={payload?.out?.type}
+                onChange={(e) => {
+                  setPayload((p: any) => ({
+                    ...p,
+                    out: { ...(p.out || {}), type: parseInt(e.target.value) },
+                  }));
+                }}
+              >
+                <option value={1}>Office</option>
+                <option value={2}>Home</option>
+                <option value={3}>Field Duty</option>
+              </Select>
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel color={"grey"}>Location Name</FormLabel>
+              <Input
+                disabled={isUpdating}
+                value={payload?.out?.location}
+                onChange={(e) => {
+                  setPayload((p: any) => ({
+                    ...p,
+                    out: { ...(p.out || {}), location: e.target.value },
+                  }));
+                }}
+              />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel color={"grey"}>Latlong</FormLabel>
+              <Input
+                disabled={isUpdating}
+                value={payload?.out?.latlng}
+                onChange={(e) => {
+                  setPayload((p: any) => ({
+                    ...p,
+                    out: { ...(p.out || {}), latlng: e.target.value },
+                  }));
+                }}
+              />
+            </FormControl>
+          </>
+        )}
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Message</FormLabel>
           <Input
@@ -282,7 +297,7 @@ const SettingPage = () => {
             mt={2}
             colorScheme="teal"
             variant={"outline"}
-            disabled={!tmpHolidayDate}
+            isDisabled={!tmpHolidayDate}
             onClick={() => {
               if (tmpHolidayDate) {
                 console.log("do", tmpHolidayDate);
@@ -326,6 +341,123 @@ const SettingPage = () => {
           )}
         </FormControl>
         <Divider mt={6} color={"grey"} />
+
+        <FormControl mt={4}>
+          <FormLabel color={"grey"}>Randomize Location</FormLabel>
+          <Switch
+            disabled={isUpdating}
+            size="md"
+            colorScheme="teal"
+            isChecked={payload.randomizeLocation}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                randomizeLocation: e.target.checked,
+              }));
+            }}
+          />
+          {payload.randomizeLocation && (
+            <>
+              <SimpleGrid columns={[1, 2, 3, 4]} spacing={"4px"} mt={2} mb={2}>
+                {(payload.locations || []).map((l: any, i: number) => {
+                  let type = "Office";
+                  if (l.type === 2) type = "Home";
+                  if (l.type === 3) type = "Field Duty";
+                  return (
+                    <Card key={i} p={4}>
+                      <HStack>
+                        <Tag size={"sm"} colorScheme="purple">
+                          {type}
+                        </Tag>
+                        <Box flex={1} />
+                        <CloseButton
+                          onClick={() =>
+                            setPayload((p: any) => ({
+                              ...p,
+                              locations: p.locations.filter(
+                                (_: any, j: number) => j !== i
+                              ),
+                            }))
+                          }
+                        />
+                      </HStack>
+                      <div>{l.location}</div>
+                      <Box fontSize={11} color={"grey"}>
+                        {l.latlng}
+                      </Box>
+                    </Card>
+                  );
+                })}
+              </SimpleGrid>
+
+              <FormLabel color={"grey"}>New Location</FormLabel>
+
+              <FormControl mt={4}>
+                <FormLabel color={"grey"}>Location Type</FormLabel>
+                <Select
+                  disabled={isUpdating}
+                  value={tmpLocation?.type || 2}
+                  onChange={(e) => {
+                    setTmpLocation((p: any) => ({
+                      ...p,
+                      type: parseInt(e.target.value),
+                    }));
+                  }}
+                >
+                  <option value={1}>Office</option>
+                  <option value={2}>Home</option>
+                  <option value={3}>Field Duty</option>
+                </Select>
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel color={"grey"}>Location Name</FormLabel>
+                <Input
+                  disabled={isUpdating}
+                  value={tmpLocation?.location || ""}
+                  onChange={(e) => {
+                    setTmpLocation((p: any) => ({
+                      ...p,
+                      location: e.target.value,
+                    }));
+                  }}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel color={"grey"}>Latlong</FormLabel>
+                <Input
+                  disabled={isUpdating}
+                  value={tmpLocation?.latlng || ""}
+                  onChange={(e) => {
+                    setTmpLocation((p: any) => ({
+                      ...p,
+                      latlng: e.target.value,
+                    }));
+                  }}
+                />
+              </FormControl>
+              <Button
+                mt={2}
+                colorScheme="teal"
+                variant={"outline"}
+                isDisabled={
+                  !tmpLocation.type ||
+                  !tmpLocation.location ||
+                  !tmpLocation.latlng
+                }
+                onClick={() => {
+                  setPayload((p: any) => ({
+                    ...p,
+                    locations: [...p.locations, tmpLocation],
+                  }));
+                  setTmpLocation({ type: 2 });
+                }}
+              >
+                Add
+              </Button>
+            </>
+          )}
+        </FormControl>
+        <Divider mt={6} color={"grey"} />
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Scheduler</FormLabel>
           <Switch
@@ -344,7 +476,7 @@ const SettingPage = () => {
         <Box mt={6}>
           <Button
             colorScheme="teal"
-            disabled={isUpdating}
+            isDisabled={isUpdating}
             onClick={async () => {
               try {
                 await doUpdate(payload);
