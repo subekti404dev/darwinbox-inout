@@ -17,6 +17,8 @@ const defaultConfig = {
   holidays: [],
   delay: 0,
   randomizeDelay: false,
+  randomizeLocation: false,
+  locations: [],
 };
 
 export const storeData = new InMemoryStore(defaultConfig);
