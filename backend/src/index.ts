@@ -25,9 +25,9 @@ app.get("/ping", (req: Request, res: Response) => {
 
 app.use("/v1", v1Routes);
 
-app.use(express.static("react_dist"));
+app.use(express.static("html"));
 app.get("*", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "react_dist", "index.html"));
+  res.sendFile(path.join(process.cwd(), "html", "index.html"));
 });
 
 app.listen(port, () => {

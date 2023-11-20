@@ -3,6 +3,6 @@ backend/dist/
 backend/node_modules/
 backend/data/
 backend/single/
-backend/react_dist/
+backend/html/
 
 frontend/node_modules/
