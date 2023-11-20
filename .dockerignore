@@ -1,6 +1,8 @@
-.vercel/
-dist/
-node_modules/
-data/
-single/
-react_dist/
+backend/.vercel/
+backend/dist/
+backend/node_modules/
+backend/data/
+backend/single/
+backend/react_dist/
+
+frontend/node_modules/
