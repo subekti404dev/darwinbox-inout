@@ -4,7 +4,7 @@ import jobRoutes from "./job.route";
 import darwinRoutes from "./darwin.route";
 import flagsRoutes from "./flags.route";
 import authRoutes from "./auth.route";
-import tokenAuth from "middlewares/token-auth.routes";
+import tokenAuth from "../../middlewares/token-auth.routes";
 
 const router = express.Router();
 

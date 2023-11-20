@@ -1,0 +1,18 @@
+FROM node:16-alpine
+
+ARG PNPM_VERSION=7.26.3
+ENV PNPM_HOME=/root/.local/share/pnpm
+ENV PATH=$PATH:$PNPM_HOME
+
+RUN apk add --no-cache curl && \
+  curl -fsSL "https://github.com/pnpm/pnpm/releases/download/v${PNPM_VERSION}/pnpm-linuxstatic-x64" -o /bin/pnpm && chmod +x /bin/pnpm && \
+  apk del curl
+WORKDIR /app
+
+COPY . .
+RUN cd frontend && pnpm install
+RUN cd backend && pnpm install
+
+EXPOSE 7008 3001
+
+CMD [ "sh", "./scripts/run_inside_docker_dev.sh" ]

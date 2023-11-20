@@ -1,5 +1,15 @@
 # DarwinInOut
 
+## Development
+run with docker-compose:
+```
+docker-compose build --no-cache
+docker-compose up
+```
+
+
+## Production
+
 run with docker-compose:
 ```
 version: '3'

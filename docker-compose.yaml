@@ -1,0 +1,14 @@
+version: '3'
+services:
+  darwin-inout:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3001:3001
+      - 7008:7008
+    volumes:
+      - ./frontend/src:/app/frontend/src
+      - ./backend/src:/app/backend/src
+      - ./scripts:/app/scripts
+      - ./backend/data:/app/backend/data
