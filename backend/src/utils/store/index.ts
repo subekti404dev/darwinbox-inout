@@ -19,6 +19,11 @@ const defaultConfig = {
   randomizeDelay: false,
   randomizeLocation: false,
   locations: [],
+  telegramBot: {
+    enabled: false,
+    token: "",
+    chatId: "",
+  },
 };
 
 export const storeData = new InMemoryStore(defaultConfig);

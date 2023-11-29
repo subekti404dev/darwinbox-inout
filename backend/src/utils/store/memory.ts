@@ -35,6 +35,10 @@ export class InMemoryStore implements IStore {
       this.writeToFile(filePathCfg, this._cfgData);
     } else {
       this._cfgData = this.loadFromFileCfg(filePathCfg, "{}");
+      if (!this._cfgData.telegramBot) {
+        this._cfgData.telegramBot = defaultValue.telegramBot;
+        this.writeToFile(filePathCfg, this._cfgData);
+      }
     }
     if (!existsSync(filePathLog)) {
       this.writeToFile(filePathLog, this._logs);

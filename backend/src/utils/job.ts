@@ -5,6 +5,7 @@ import { storeData } from "./store";
 import { currentDate, currentDayName } from "./day";
 import { errParser } from "./errParser";
 import { millisecondsToMinutes, minutesToMilliseconds } from "date-fns";
+import { notifyMe } from "../services/telegram.service";
 
 let jobClockIn: cron.ScheduledTask | null = null;
 let jobClockOut: cron.ScheduledTask | null = null;
@@ -94,6 +95,11 @@ export const startJob = (start?: string, end?: string) => {
         status: 200,
         errMsg: null,
       });
+      notifyMe({
+        type: "checkin",
+        status: "success",
+        data: JSON.stringify(payload, null, 2),
+      });
     } catch (error: any) {
       const errMsg = errParser(error);
       const reqStatus = error?.response?.status;
@@ -104,6 +110,11 @@ export const startJob = (start?: string, end?: string) => {
         errMsg,
       });
       console.log(`[Error]${reqStatus && `[${reqStatus}]`}: ${errMsg}`);
+      notifyMe({
+        type: "checkin",
+        status: "failed",
+        data: JSON.stringify({ error: errMsg }, null, 2),
+      });
     }
   });
   jobClockOut = cron.schedule(cronOut as string, async () => {
@@ -123,6 +134,11 @@ export const startJob = (start?: string, end?: string) => {
         status: 200,
         errMsg: null,
       });
+      notifyMe({
+        type: "checkout",
+        status: "success",
+        data: JSON.stringify(payload, null, 2),
+      });
     } catch (error: any) {
       const errMsg = errParser(error);
       const reqStatus = error?.response?.status;
@@ -133,6 +149,11 @@ export const startJob = (start?: string, end?: string) => {
         errMsg,
       });
       console.log(`[Error]${reqStatus && `[${reqStatus}]`}: ${errMsg}`);
+      notifyMe({
+        type: "checkout",
+        status: "failed",
+        data: JSON.stringify({ error: errMsg }, null, 2),
+      });
     }
   });
   jobClockIn.start();
