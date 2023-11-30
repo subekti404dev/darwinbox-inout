@@ -2,6 +2,7 @@ import Axios from "axios";
 import { base64encode } from "nodejs-base64";
 import { storeData } from "../utils/store";
 import { currentDate } from "../utils/day";
+import { startJob } from "../utils/job";
 
 const getHeaders = (host: string) => ({
   "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 9; Redmi Note 5 MIUI/9.6.27)",
@@ -25,6 +26,10 @@ export const login = async ({ qrcode, host }: ILogin) => {
   });
   if (data?.token) {
     storeData.setConfigData({ ...data, host });
+    const cfg = storeData.getConfigData();
+    if (cfg.scheduler) {
+      startJob();
+    }
   }
   return data;
 };
