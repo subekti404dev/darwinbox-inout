@@ -93,6 +93,7 @@ const SettingPage = () => {
       randomizeDelay: cfg?.randomizeDelay || false,
       randomizeLocation: cfg?.randomizeLocation || false,
       locations: cfg?.locations || [],
+      telegramBot: cfg?.telegramBot,
     };
   };
 
@@ -457,6 +458,64 @@ const SettingPage = () => {
             </>
           )}
         </FormControl>
+
+        <Divider mt={6} color={"grey"} />
+
+        <FormControl mt={4}>
+          <FormLabel color={"grey"}>Telegram Bot</FormLabel>
+          <Switch
+            disabled={isUpdating}
+            size="md"
+            colorScheme="teal"
+            isChecked={payload.telegramBot?.enabled}
+            onChange={(e) => {
+              setPayload((p: any) => ({
+                ...p,
+                telegramBot: {
+                  ...p.telegramBot,
+                  enabled: e.target.checked,
+                },
+              }));
+            }}
+          />
+          {payload.telegramBot?.enabled && (
+            <>
+              <FormControl mt={4}>
+                <FormLabel color={"grey"}>Token</FormLabel>
+                <Input
+                  disabled={isUpdating}
+                  value={payload.telegramBot?.token || ""}
+                  onChange={(e) => {
+                    setPayload((p: any) => ({
+                      ...p,
+                      telegramBot: {
+                        ...p.telegramBot,
+                        token: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel color={"grey"}>Chat ID</FormLabel>
+                <Input
+                  disabled={isUpdating}
+                  value={payload.telegramBot?.chatId || ""}
+                  onChange={(e) => {
+                    setPayload((p: any) => ({
+                      ...p,
+                      telegramBot: {
+                        ...p.telegramBot,
+                        chatId: e.target.value,
+                      },
+                    }));
+                  }}
+                />
+              </FormControl>
+            </>
+          )}
+        </FormControl>
+
         <Divider mt={6} color={"grey"} />
         <FormControl mt={4}>
           <FormLabel color={"grey"}>Scheduler</FormLabel>
