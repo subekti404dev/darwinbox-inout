@@ -205,7 +205,7 @@ export const startExpiredReminder = () => {
   // 05:00 | UTC + 7
   jobExpiredReminder = cron.schedule("0 5 * * *", async () => {
     if (expiredDate === tomorrowDate) {
-        sendMessage(`Darwinbox token will expire tomorrow: ${expiredDate}`);
+        sendMessage({message: `Darwinbox token will expire tomorrow: ${expiredDate}`});
     }
   });
 
