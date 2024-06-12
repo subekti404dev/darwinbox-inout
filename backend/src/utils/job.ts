@@ -4,11 +4,12 @@ import { checkin, checkout } from "../services/darwin.service";
 import { storeData } from "./store";
 import { currentDate, currentDayName } from "./day";
 import { errParser } from "./errParser";
-import { millisecondsToMinutes, minutesToMilliseconds } from "date-fns";
-import { notifyMe } from "../services/telegram.service";
+import { millisecondsToMinutes, minutesToMilliseconds, format, addDays } from "date-fns";
+import { notifyMe, sendMessage } from "../services/telegram.service";
 
 let jobClockIn: cron.ScheduledTask | null = null;
 let jobClockOut: cron.ScheduledTask | null = null;
+let jobExpiredReminder: cron.ScheduledTask | null = null;
 
 let cronIn: string | null;
 let cronOut: string | null;
@@ -158,7 +159,7 @@ export const startJob = (start?: string, end?: string) => {
   });
   jobClockIn.start();
   jobClockOut.start();
-
+  startExpiredReminder();
   console.log(`Job started ! [${cronIn}, ${cronOut}]`);
 
   return {
@@ -184,6 +185,7 @@ export const stopJob = () => {
     // cronOut,
     scheduler: false,
   });
+  stopExpiredRemiderJob();
   console.log(`Job stopped !`);
 };
 
@@ -192,4 +194,30 @@ export const statusJob = () => {
     start: cronIn,
     end: cronOut,
   };
+};
+
+export const startExpiredReminder = () => {
+  stopExpiredRemiderJob();
+  const currData = storeData.getConfigData();
+  const expiredDate = format(new Date(currData.expires * 1000), "yyyy-MM-dd");
+  const tomorrowDate = format(addDays(new Date(), 1), "yyyy-MM-dd");
+  
+  // 05:00 | UTC + 7
+  jobExpiredReminder = cron.schedule("0 5 * * *", async () => {
+    if (expiredDate === tomorrowDate) {
+        sendMessage(`Darwinbox token will expire tomorrow: ${expiredDate}`);
+    }
+  });
+
+  jobExpiredReminder.start();
+  console.log(`Exp Remider Job started !`);
+};
+
+export const stopExpiredRemiderJob = () => {
+  if (!!jobExpiredReminder) {
+    jobExpiredReminder.stop();
+    jobExpiredReminder = null;
+  }
+
+  console.log(`Exp Remindder Job stopped !`);
 };
