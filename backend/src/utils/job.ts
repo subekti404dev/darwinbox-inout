@@ -202,7 +202,7 @@ export const startExpiredReminder = () => {
   const expiredDate = format(new Date(currData.expires * 1000), "yyyy-MM-dd");
   const tomorrowDate = format(addDays(new Date(), 1), "yyyy-MM-dd");
   
-  jobExpiredReminder = cron.schedule("40 8 * * *", async () => {
+  jobExpiredReminder = cron.schedule("10 9 * * *", async () => {
     if (expiredDate === tomorrowDate) {
         console.log({ expiredDate, tomorrowDate });
         sendMessage({ message: `Darwinbox token will expire tomorrow: ${expiredDate}` });
