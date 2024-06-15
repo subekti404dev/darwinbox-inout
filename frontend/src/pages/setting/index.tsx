@@ -18,10 +18,12 @@ import {
   Tag,
   TagCloseButton,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useConfigStore } from "../../store/config.store";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import ModalQR from "../../components/modal-qr";
 
 const SettingPage = () => {
   const [config, doUpdate, isUpdating] = useConfigStore((store) => [
@@ -35,6 +37,11 @@ const SettingPage = () => {
   const [tmpLocation, setTmpLocation] = useState<any>({ type: 2 });
   const [holidays, setHolidays] = useState<any>([]);
   const toast = useToast();
+  const {
+    isOpen: isOpenQRModal,
+    onClose: onCloseQRModal,
+    onOpen: onOpenModalQR,
+  } = useDisclosure();
 
   useEffect(() => {
     const payload = mapConfigToPayload(config);
@@ -109,6 +116,15 @@ const SettingPage = () => {
           <FormLabel color={"grey"}>Expires</FormLabel>
           <Input disabled value={expires} />
         </FormControl>
+
+        <Box mt={6}>
+          <Button
+            colorScheme="teal"
+            onClick={onOpenModalQR}
+          >
+            Update Token
+          </Button>
+        </Box>
         <Divider mt={6} color={"grey"} />
         <Box mt={4} fontWeight={500} fontSize={18} color={"grey"}>
           Clockin
@@ -549,6 +565,9 @@ const SettingPage = () => {
           </Button>
         </Box>
       </Card>
+
+      <ModalQR isOpen={isOpenQRModal} onClose={onCloseQRModal} />
+
     </Box>
   );
 };
